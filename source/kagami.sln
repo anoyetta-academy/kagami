@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kagami", "kagami\kagami.csproj", "{9C2E5861-46C0-4D0B-A3BC-6398758BCD21}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C2E5861-46C0-4D0B-A3BC-6398758BCD21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C2E5861-46C0-4D0B-A3BC-6398758BCD21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C2E5861-46C0-4D0B-A3BC-6398758BCD21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C2E5861-46C0-4D0B-A3BC-6398758BCD21}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E673F734-72BD-4929-A291-5BFDDF3DE161}
+	EndGlobalSection
+EndGlobal
