@@ -43,6 +43,8 @@ namespace kagami.Models
         [JsonIgnore]
         public IReadOnlyList<ActionEchoModel> Echoes => this.echoes;
 
+        private volatile bool toFile = false;
+
         [JsonProperty("actions")]
         public IEnumerable<ActionEchoModel> Actions
         {
@@ -52,6 +54,11 @@ namespace kagami.Models
                 lock (this.echoes)
                 {
                     source = this.echoes.ToArray();
+                }
+
+                if (this.toFile)
+                {
+                    return source;
                 }
 
                 var result = (
@@ -92,13 +99,18 @@ namespace kagami.Models
 
         public async Task<string> ParseJsonAsync() => await Task.Run(() =>
         {
-            var json = JsonConvert.SerializeObject(
-                this,
-                Formatting.Indented,
-                new JsonSerializerSettings()
-                {
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                });
+            var json = string.Empty;
+
+            lock (this)
+            {
+                json = JsonConvert.SerializeObject(
+                    this,
+                    Formatting.Indented,
+                    new JsonSerializerSettings()
+                    {
+                        DefaultValueHandling = DefaultValueHandling.Ignore,
+                    });
+            }
 
             return json;
         });
@@ -134,10 +146,20 @@ namespace kagami.Models
                 }
 
                 var f = Path.Combine(this.Config.LogDirectory, fileName);
-                File.WriteAllText(
-                    f,
-                    await this.ParseJsonAsync(),
-                    new UTF8Encoding(false));
+
+                try
+                {
+                    this.toFile = true;
+
+                    File.WriteAllText(
+                        f,
+                        await this.ParseJsonAsync(),
+                        new UTF8Encoding(false));
+                }
+                finally
+                {
+                    this.toFile = false;
+                }
             });
         }
     }
