@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Advanced_Combat_Tracker;
 using Newtonsoft.Json;
 
@@ -87,9 +90,55 @@ namespace kagami.Models
             }
         }
 
-        public string ParseJson()
+        public async Task<string> ParseJsonAsync() => await Task.Run(() =>
         {
-            return string.Empty;
+            var json = JsonConvert.SerializeObject(
+                this,
+                Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                });
+
+            return json;
+        });
+
+        private int takeCount;
+
+        public async Task SaveLogAsync()
+        {
+            if (this.echoes.Count < 1)
+            {
+                return;
+            }
+
+            var fileName = string.Empty;
+
+            lock (this)
+            {
+                this.takeCount++;
+                fileName =
+                    $"{DateTime.Now:yyyy-MM-dd_HHmmss}.{this.PlayerName}[{this.PlayerJob}].{this.Zone}.{this.takeCount}.json";
+            }
+
+            if (string.IsNullOrEmpty(this.Config.LogDirectory))
+            {
+                return;
+            }
+
+            await Task.Run(async () =>
+            {
+                if (!Directory.Exists(this.Config.LogDirectory))
+                {
+                    Directory.CreateDirectory(this.Config.LogDirectory);
+                }
+
+                var f = Path.Combine(this.Config.LogDirectory, fileName);
+                File.WriteAllText(
+                    f,
+                    await this.ParseJsonAsync(),
+                    new UTF8Encoding(false));
+            });
         }
     }
 }
