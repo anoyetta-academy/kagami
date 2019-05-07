@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using kagami.Helpers;
 using Prism.Mvvm;
 using RainbowMage.OverlayPlugin;
 
@@ -36,7 +38,15 @@ namespace kagami
         public KagamiOverlayConfig Config
         {
             get => this.config;
-            set => this.SetProperty(ref this.config, value);
+            private set => this.SetProperty(ref this.config, value);
+        }
+
+        private KagamiOverlay overlay;
+
+        public KagamiOverlay Overlay
+        {
+            get => this.overlay;
+            private set => this.SetProperty(ref this.overlay, value);
         }
 
         public KagamiAddon()
@@ -99,11 +109,30 @@ namespace kagami
 
         public IOverlayConfig CreateOverlayConfigInstance(string name) => this.Config = new KagamiOverlayConfig(name);
 
-        public IOverlay CreateOverlayInstance(IOverlayConfig config) => new KagamiOverlay(config as KagamiOverlayConfig);
+        public IOverlay CreateOverlayInstance(IOverlayConfig config)
+        {
+            this.Overlay = new KagamiOverlay(config as KagamiOverlayConfig);
+            this.Initialize();
+            return this.Overlay;
+        }
 
         public void Dispose()
         {
+            FFXIVPluginHelper.Instance.Stop();
+            SharlayanHelper.Instance.Stop();
+
             AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
+        }
+
+        private void Initialize()
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(500);
+
+                FFXIVPluginHelper.Instance.Start();
+                SharlayanHelper.Instance.Start();
+            });
         }
     }
 }

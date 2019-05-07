@@ -66,6 +66,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ThreadWorker.cs" />
+    <Compile Include="Helpers\FFXIVPluginHelper.cs" />
+    <Compile Include="Helpers\SharlayanHelper.cs" />
     <Compile Include="KagamiOverlay.cs" />
     <Compile Include="KagamiOverlayConfig.cs" />
     <Compile Include="KagamiOverlayConfigPanel.cs">
@@ -75,6 +78,11 @@
       <DependentUpon>KagamiOverlayConfigPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="KagamiAddon.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Models\ActionCategory.cs" />
+    <Compile Include="Models\ActionEchoModel.cs" />
+    <Compile Include="Models\ActionEchoesModel.cs" />
+    <Compile Include="Models\NetworkAbilityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,9 +130,7 @@
       <Version>5.0.4</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\KagamiConfigView.xaml">
       <SubType>Designer</SubType>

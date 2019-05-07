@@ -6,6 +6,8 @@ namespace kagami
     {
         public KagamiOverlay(KagamiOverlayConfig config) : base(config, config.Name)
         {
+            // Loggerにコールバックを仕込む
+            Logger.LogCallback += this.Log;
         }
 
         protected override void Update()
