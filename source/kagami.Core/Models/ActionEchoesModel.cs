@@ -32,6 +32,12 @@ namespace kagami.Models
         [JsonProperty("job")]
         public string PlayerJob { get; set; }
 
+        [JsonProperty("encDPS")]
+        public double EncDPS { get; set; }
+
+        [JsonProperty("duration")]
+        public TimeSpan Duration { get; set; }
+
         [JsonProperty("zone")]
         public string Zone => ActGlobals.oFormActMain?.CurrentZone ?? string.Empty;
 
@@ -103,6 +109,22 @@ namespace kagami.Models
         {
             var data = this.Config.IsDesignMode ? CreateDesignModeDataModel() : this;
             var json = string.Empty;
+
+            if (ActGlobals.oFormActMain.ActiveZone.ActiveEncounter != null)
+            {
+                var dpsList = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+                var dps = dpsList.FirstOrDefault(x =>
+                    x.Name == this.PlayerName ||
+                    x.Name == "YOU");
+
+                this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
+                this.Duration = dps?.Duration ?? TimeSpan.Zero;
+            }
+            else
+            {
+                this.EncDPS = 0;
+                this.Duration = TimeSpan.Zero;
+            }
 
             lock (this)
             {

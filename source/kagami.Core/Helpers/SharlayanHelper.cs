@@ -40,6 +40,8 @@ namespace kagami.Helpers
                         ProcessSubscribeInterval,
                         "Sharlayan Process Subscriber",
                         ThreadPriority.Lowest);
+
+                    this.processSubscriber.Run();
                 }
             }
         }
@@ -62,12 +64,13 @@ namespace kagami.Helpers
         private void DetectFFXIVProcess()
         {
             var ffxiv = FFXIVPluginHelper.Instance.FFXIVProcess;
-            var ffxivLanguage = FFXIVPluginHelper.Instance.FFXIVPluginLanguage;
 
             if (ffxiv == null)
             {
                 return;
             }
+
+            var ffxivLanguage = FFXIVPluginHelper.Instance.FFXIVPluginLanguage;
 
             lock (this)
             {

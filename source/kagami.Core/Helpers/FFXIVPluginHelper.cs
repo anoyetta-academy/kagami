@@ -30,7 +30,7 @@ namespace kagami.Helpers
 
         public Process FFXIVProcess => this.ffxivPluginConfig?.Process;
 
-        public string FFXIVPluginLanguage => this.ffxivPluginLogParse?.Settings?.LanguageID ?? 0 switch
+        public string FFXIVPluginLanguage => (this.ffxivPluginLogParse?.Settings?.LanguageID ?? 0) switch
         {
             1 => "English",
             2 => "French",

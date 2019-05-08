@@ -34,6 +34,9 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OverlayPlugin">
+      <HintPath>..\Thirdparty\OverlayPlugin\OverlayPlugin.dll</HintPath>
+    </Reference>
     <Reference Include="OverlayPlugin.Common">
       <HintPath>..\Thirdparty\OverlayPlugin\OverlayPlugin.Common.dll</HintPath>
     </Reference>
