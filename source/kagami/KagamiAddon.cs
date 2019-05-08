@@ -4,53 +4,41 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using kagami.Helpers;
-using Prism.Mvvm;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
 {
     public class KagamiAddon :
-        BindableBase,
         IOverlayAddon
     {
-        private static readonly Lazy<KagamiAddon> LazyInstance = new Lazy<KagamiAddon>();
-
-        public static KagamiAddon Instance => LazyInstance.Value;
-
-        private string resourcesDirectory;
+        public static KagamiAddon Current
+        {
+            get;
+            private set;
+        }
 
         public string ResourcesDirectory
         {
-            get => this.resourcesDirectory;
-            set => this.SetProperty(ref this.resourcesDirectory, value);
+            get;
+            private set;
         }
-
-        private string updateMessage;
-
-        public string UpdateMessage
-        {
-            get => this.updateMessage;
-            set => this.SetProperty(ref this.updateMessage, value);
-        }
-
-        private KagamiOverlayConfig config;
 
         public KagamiOverlayConfig Config
         {
-            get => this.config;
-            private set => this.SetProperty(ref this.config, value);
+            get;
+            private set;
         }
-
-        private KagamiOverlay overlay;
 
         public KagamiOverlay Overlay
         {
-            get => this.overlay;
-            private set => this.SetProperty(ref this.overlay, value);
+            get;
+            private set;
         }
 
         public KagamiAddon()
         {
+            Current = this;
+
             AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
 
             var asm = Assembly.GetCallingAssembly();
@@ -107,17 +95,19 @@ namespace kagami
 
         public Control CreateOverlayConfigControlInstance(IOverlay overlay) => new KagamiOverlayConfigPanel(overlay as KagamiOverlay);
 
-        public IOverlayConfig CreateOverlayConfigInstance(string name) => this.Config = new KagamiOverlayConfig(name);
+        public IOverlayConfig CreateOverlayConfigInstance(string name) => new KagamiOverlayConfig(name);
 
         public IOverlay CreateOverlayInstance(IOverlayConfig config)
         {
-            this.Overlay = new KagamiOverlay(config as KagamiOverlayConfig);
+            this.Config = config as KagamiOverlayConfig;
             this.Initialize();
+            this.Overlay = new KagamiOverlay(this.Config);
             return this.Overlay;
         }
 
         public void Dispose()
         {
+            XIVLogSubscriber.Instance.Stop();
             FFXIVPluginHelper.Instance.Stop();
             SharlayanHelper.Instance.Stop();
 
@@ -132,6 +122,13 @@ namespace kagami
 
                 FFXIVPluginHelper.Instance.Start();
                 SharlayanHelper.Instance.Start();
+
+                // Actionリストを取得しておく
+                var a = SharlayanHelper.Instance.GetActionInfo(0);
+
+                await Task.Delay(100);
+
+                XIVLogSubscriber.Instance.Start();
             });
         }
     }

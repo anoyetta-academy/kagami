@@ -42,109 +42,159 @@
     </Style>
   </UserControl.Resources>
 
-  <ScrollViewer
-    Focusable="False"
-    IsTabStop="False"
-    VerticalScrollBarVisibility="Auto"
-    HorizontalScrollBarVisibility="Auto">
+  <Grid>
+    <ScrollViewer
+      Margin="0 0 0 40"
+      Focusable="False"
+      IsTabStop="False"
+      VerticalScrollBarVisibility="Auto"
+      HorizontalScrollBarVisibility="Auto">
 
-    <Grid Margin="8">
-      <StackPanel>
-        <!-- General start -->
-        <Label Content="General" FontWeight="Bold" />
-        <StackPanel Margin="10 5 0 0">
-          <CheckBox Content="Visible" IsChecked="{Binding Config.IsVisible, Mode=TwoWay}" />
-          <CheckBox Content="Click through" IsChecked="{Binding Config.IsClickThru, Mode=TwoWay}" Margin="0 5 0 0" />
-          <CheckBox Content="Lock layout" IsChecked="{Binding Config.IsLocked, Mode=TwoWay}" Margin="0 5 0 0" />
+      <Grid Margin="8">
+        <StackPanel>
+          <!-- General start -->
+          <Label Content="General" FontWeight="Bold" />
+          <StackPanel Margin="10 5 0 0">
+            <CheckBox Content="Visible" IsChecked="{Binding Config.IsVisible, Mode=TwoWay}" />
+            <CheckBox Content="Click through" IsChecked="{Binding Config.IsClickThru, Mode=TwoWay}" Margin="0 5 0 0" />
+            <CheckBox Content="Lock layout" IsChecked="{Binding Config.IsLocked, Mode=TwoWay}" Margin="0 5 0 0" />
 
-          <Label Content="URL" Margin="0 5 0 0" />
-          <DockPanel>
-            <TextBox Text="{Binding Config.Url, Mode=TwoWay}" Width="550" />
+            <Label Content="URL" Margin="0 5 0 0" />
+            <DockPanel>
+              <TextBox Text="{Binding Config.Url, Mode=TwoWay}" Width="550" />
+              <Button
+                Margin="5 0 0 0"
+                Padding="5 0"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Foreground="Blue"
+                BorderThickness="0"
+                Content="Browse"
+                Command="{Binding BrowseUrlCommand, Mode=OneWay}" />
+            </DockPanel>
+
+            <Label Content="Max FPS" Margin="0 5 0 0" />
+            <toolkit:IntegerUpDown Value="{Binding Config.MaxFrameRate, Mode=TwoWay}" Minimum="1" Maximum="60" Width="70" />
+
+            <!--
+            <CheckBox Content="Global hot key" IsChecked="{Binding Config.GlobalHotkeyEnabled, Mode=TwoWay}" Margin="0 15 0 0" />
+            <Label Content="Key" Margin="0 5 0 0" />
+            <TextBox Text="{Binding Config.GlobalHotkey, Mode=TwoWay}" Width="100" IsEnabled="{Binding Config.GlobalHotkeyEnabled, Mode=OneWay}" />
+            <Label Content="Function" Margin="0 5 0 0" />
+            <TextBox Text="{Binding Config.GlobalHotkeyType, Mode=TwoWay}" Width="100" IsEnabled="{Binding Config.GlobalHotkeyEnabled, Mode=OneWay}" />
+            -->
+          </StackPanel>
+          <!-- General end -->
+
+          <!-- kagami start -->
+          <Label Content="kagami" FontWeight="Bold" Margin="0 15 0 0" />
+          <StackPanel Margin="10 5 0 0">
+            <CheckBox Content="Design mode" IsChecked="{Binding Config.IsDesignMode, Mode=TwoWay}" />
+
+            <Label Content="Buffer size of action echo (sec)" Margin="0 8 0 0" />
+            <toolkit:IntegerUpDown Value="{Binding Config.BufferSizeOfActionEcho, Mode=TwoWay}" Minimum="1" Maximum="120" Width="90" />
+
+            <Label Content="Parse log polling interval (msec)" Margin="0 5 0 0" />
+            <toolkit:IntegerUpDown Value="{Binding Config.PollingInterval, Mode=TwoWay}" Minimum="5" Maximum="1000" Width="90" />
+
+            <Label Content="Log folder" Margin="0 5 0 0" />
+            <DockPanel>
+              <TextBox Text="{Binding Config.LogDirectory, Mode=TwoWay}" Width="550" />
+              <Button
+                Margin="5 0 0 0"
+                Padding="5 0"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Foreground="Blue"
+                BorderThickness="0"
+                Content="Browse"
+                Command="{Binding BrowseLogFolderCommand, Mode=OneWay}" />
+
+              <Button
+                Margin="5 0 0 0"
+                Padding="5 0"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Foreground="Blue"
+                BorderThickness="0"
+                Content="Open"
+                Command="{Binding OpenLogFolderCommand, Mode=OneWay}" />
+            </DockPanel>
             <Button
-              Margin="5 0 0 0"
+              Margin="0 2 0 0"
               Padding="5 0"
               HorizontalAlignment="Left"
               Background="Transparent"
-              Foreground="MidnightBlue"
+              Foreground="Blue"
               BorderThickness="0"
-              Content="Browse"
-              Command="{Binding BrowseUrlCommand, Mode=OneWay}" />
-          </DockPanel>
+              Content="Save manually"
+              Command="{Binding SaveLogCommand, Mode=OneWay}" />
 
-          <Label Content="Max FPS" Margin="0 5 0 0" />
-          <toolkit:IntegerUpDown Value="{Binding Config.MaxFrameRate, Mode=TwoWay}" Minimum="1" Maximum="60" Width="70" />
+            <CheckBox Content="Ghost mode" IsChecked="{Binding Config.IsGhostMode, Mode=TwoWay}" Margin="0 15 0 0" />
 
-          <!--
-          <CheckBox Content="Global hot key" IsChecked="{Binding Config.GlobalHotkeyEnabled, Mode=TwoWay}" Margin="0 15 0 0" />
-          <Label Content="Key" Margin="0 5 0 0" />
-          <TextBox Text="{Binding Config.GlobalHotkey, Mode=TwoWay}" Width="100" IsEnabled="{Binding Config.GlobalHotkeyEnabled, Mode=OneWay}" />
-          <Label Content="Function" Margin="0 5 0 0" />
-          <TextBox Text="{Binding Config.GlobalHotkeyType, Mode=TwoWay}" Width="100" IsEnabled="{Binding Config.GlobalHotkeyEnabled, Mode=OneWay}" />
-          -->
+            <Label Content="Ghost log file" Margin="0 5 0 0" />
+            <DockPanel>
+              <TextBox Text="{Binding Config.GhostLogFile, Mode=TwoWay}" Width="550" />
+              <Button
+                Margin="5 0 0 0"
+                Padding="5 0"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Foreground="Blue"
+                BorderThickness="0"
+                Content="Browse"
+                Command="{Binding BrowseGhostFileCommand, Mode=OneWay}" />
+
+              <Button
+                Margin="5 0 0 0"
+                Padding="5 0"
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                Foreground="Blue"
+                BorderThickness="0"
+                Content="Open"
+                Command="{Binding OpenGhostFileCommand, Mode=OneWay}" />
+            </DockPanel>
+          </StackPanel>
+          <!-- General end -->
         </StackPanel>
-        <!-- General end -->
+      </Grid>
+    </ScrollViewer>
 
-        <!-- kagami start -->
-        <Label Content="kagami" FontWeight="Bold" Margin="0 15 0 0" />
-        <StackPanel Margin="10 5 0 0">
-          <Label Content="Buffer size of action echo (sec)" Margin="0 -3 0 0" />
-          <toolkit:IntegerUpDown Value="{Binding Config.BufferSizeOfActionEcho, Mode=TwoWay}" Minimum="1" Maximum="120" Width="90" />
+    <StackPanel
+      Margin="8"
+      Orientation="Horizontal"
+      HorizontalAlignment="Right"
+      VerticalAlignment="Bottom">
+      <Button
+        Margin="0 0 0 0"
+        Padding="5 0"
+        HorizontalAlignment="Left"
+        Background="Transparent"
+        Foreground="Blue"
+        BorderThickness="0"
+        Content="Copy data model to clipboard"
+        Command="{Binding CopyDataModelCommand, Mode=OneWay}" />
 
-          <Label Content="Parse log polling interval (msec)" Margin="0 5 0 0" />
-          <toolkit:IntegerUpDown Value="{Binding Config.PollingInterval, Mode=TwoWay}" Minimum="5" Maximum="1000" Width="90" />
+      <Button
+        Margin="15 0 0 0"
+        Padding="5 0"
+        HorizontalAlignment="Left"
+        Background="Transparent"
+        Foreground="Blue"
+        BorderThickness="0"
+        Content="Reload overlay"
+        Command="{Binding ReloadOverlayCommand, Mode=OneWay}" />
 
-          <Label Content="Log folder" Margin="0 5 0 0" />
-          <DockPanel>
-            <TextBox Text="{Binding Config.LogDirectory, Mode=TwoWay}" Width="550" />
-            <Button
-              Margin="5 0 0 0"
-              Padding="5 0"
-              HorizontalAlignment="Left"
-              Background="Transparent"
-              Foreground="MidnightBlue"
-              BorderThickness="0"
-              Content="Browse"
-              Command="{Binding BrowseLogFolderCommand, Mode=OneWay}" />
-
-            <Button
-              Margin="5 0 0 0"
-              Padding="5 0"
-              HorizontalAlignment="Left"
-              Background="Transparent"
-              Foreground="MidnightBlue"
-              BorderThickness="0"
-              Content="Open"
-              Command="{Binding OpenLogFolderCommand, Mode=OneWay}" />
-          </DockPanel>
-
-          <CheckBox Content="Ghost mode" IsChecked="{Binding Config.IsGhostMode, Mode=TwoWay}" Margin="0 15 0 0" />
-
-          <Label Content="Ghost log file" Margin="0 5 0 0" />
-          <DockPanel>
-            <TextBox Text="{Binding Config.GhostLogFile, Mode=TwoWay}" Width="550" />
-            <Button
-              Margin="5 0 0 0"
-              Padding="5 0"
-              HorizontalAlignment="Left"
-              Background="Transparent"
-              Foreground="MidnightBlue"
-              BorderThickness="0"
-              Content="Browse"
-              Command="{Binding BrowseGhostLogFileCommand, Mode=OneWay}" />
-
-            <Button
-              Margin="5 0 0 0"
-              Padding="5 0"
-              HorizontalAlignment="Left"
-              Background="Transparent"
-              Foreground="MidnightBlue"
-              BorderThickness="0"
-              Content="Open"
-              Command="{Binding OpenGhostLogFileCommand, Mode=OneWay}" />
-          </DockPanel>
-        </StackPanel>
-        <!-- General end -->
-      </StackPanel>
-    </Grid>
-  </ScrollViewer>
+      <Button
+        Margin="15 0 0 0"
+        Padding="5 0"
+        HorizontalAlignment="Left"
+        Background="Transparent"
+        Foreground="Blue"
+        BorderThickness="0"
+        Content="Developer tool"
+        Command="{Binding OpenDeveloperToolCommand, Mode=OneWay}" />
+    </StackPanel>
+  </Grid>
 </UserControl>

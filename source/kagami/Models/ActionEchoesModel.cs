@@ -24,7 +24,7 @@ namespace kagami.Models
         #endregion Singleton
 
         [JsonIgnore]
-        public KagamiOverlayConfig Config => KagamiAddon.Instance.Config;
+        public KagamiOverlayConfig Config => KagamiAddon.Current.Config;
 
         [JsonProperty("player")]
         public string PlayerName { get; set; }
@@ -36,7 +36,7 @@ namespace kagami.Models
         public string Zone => ActGlobals.oFormActMain?.CurrentZone ?? string.Empty;
 
         [JsonProperty("time")]
-        public DateTime Time { get; private set; }
+        public DateTime Time { get; set; }
 
         private readonly List<ActionEchoModel> echoes = new List<ActionEchoModel>(5120);
 
@@ -66,6 +66,8 @@ namespace kagami.Models
                     where
                     x.Timestamp <= this.Time &&
                     x.Timestamp >= this.Time.AddSeconds(this.Config.BufferSizeOfActionEcho * -1)
+                    orderby
+                    x.Timestamp descending
                     select
                     x).ToArray();
 
@@ -99,12 +101,13 @@ namespace kagami.Models
 
         public async Task<string> ParseJsonAsync() => await Task.Run(() =>
         {
+            var data = this.Config.IsDesignMode ? CreateDesignModeDataModel() : this;
             var json = string.Empty;
 
             lock (this)
             {
                 json = JsonConvert.SerializeObject(
-                    this,
+                    data,
                     Formatting.Indented,
                     new JsonSerializerSettings()
                     {
@@ -129,8 +132,12 @@ namespace kagami.Models
             lock (this)
             {
                 this.takeCount++;
+
                 fileName =
                     $"{DateTime.Now:yyyy-MM-dd_HHmmss}.{this.PlayerName}[{this.PlayerJob}].{this.Zone}.{this.takeCount}.json";
+
+                // 無効な文字を取り除く
+                fileName = string.Concat(fileName.Where(c => !Path.GetInvalidFileNameChars().Contains(c)));
             }
 
             if (string.IsNullOrEmpty(this.Config.LogDirectory))
@@ -162,5 +169,98 @@ namespace kagami.Models
                 }
             });
         }
+
+        #region Design mode
+
+        private static ActionEchoesModel CreateDesignModeDataModel()
+        {
+            var model = new ActionEchoesModel();
+
+            var now = DateTime.Now;
+
+            model.PlayerName = "Anoyetta Anon";
+            model.PlayerJob = "SCH";
+            model.Time = now;
+
+            model.AddRange(new[]
+            {
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 5),
+                    Actor = model.PlayerName,
+                    ID = 168,
+                    Name = "ミアズマ",
+                    Category = ActionCategory.Spell,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 4),
+                    Actor = model.PlayerName,
+                    ID = 178,
+                    Name = "バイオラ",
+                    Category = ActionCategory.Spell,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 4),
+                    Actor = model.PlayerName,
+                    ID = 9618,
+                    Name = "エナジードレイン",
+                    Category = ActionCategory.Ability,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 3),
+                    Actor = model.PlayerName,
+                    ID = 179,
+                    Name = "シャドウフレア",
+                    Category = ActionCategory.Ability,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 3),
+                    Actor = model.PlayerName,
+                    ID = 7436,
+                    Name = "連環計",
+                    Category = ActionCategory.Ability,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 2),
+                    Actor = model.PlayerName,
+                    ID = 177,
+                    Name = "ミアズラ",
+                    Category = ActionCategory.Spell,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 2),
+                    Actor = model.PlayerName,
+                    ID = 9618,
+                    Name = "エナジードレイン",
+                    Category = ActionCategory.Ability,
+                    RecastTime = 2.5f,
+                },
+                new ActionEchoModel()
+                {
+                    Timestamp = now.AddSeconds(-2.5 * 1),
+                    Actor = model.PlayerName,
+                    ID = 7435,
+                    Name = "魔炎法",
+                    Category = ActionCategory.Spell,
+                    RecastTime = 2.5f,
+                },
+            });
+
+            return model;
+        }
+
+        #endregion Design mode
     }
 }

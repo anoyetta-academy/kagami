@@ -13,12 +13,26 @@ namespace kagami.Models
         {
             lock (SequenceLocker)
             {
+                if (currentSequence >= long.MaxValue)
+                {
+                    currentSequence = 0;
+                }
+
                 this.Seq = ++currentSequence;
             }
         }
 
         [JsonProperty("seq")]
         public long Seq { get; private set; }
+
+        private string source;
+
+        [JsonProperty("source")]
+        public string Source
+        {
+            get => this.source;
+            set => this.SetProperty(ref this.source, value);
+        }
 
         private DateTime timestamp;
 

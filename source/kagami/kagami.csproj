@@ -38,6 +38,9 @@
       <HintPath>..\Thirdparty\ACT\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="HtmlRenderer">
+      <HintPath>..\Thirdparty\OverlayPlugin\HtmlRenderer.dll</HintPath>
+    </Reference>
     <Reference Include="OverlayPlugin">
       <HintPath>..\Thirdparty\OverlayPlugin\OverlayPlugin.dll</HintPath>
     </Reference>
@@ -64,6 +67,9 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Xilium.CefGlue">
+      <HintPath>..\Thirdparty\OverlayPlugin\Xilium.CefGlue.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ThreadWorker.cs" />
@@ -101,6 +107,7 @@
     <Compile Include="Views\KagamiConfigView.xaml.cs">
       <DependentUpon>KagamiConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XIVLogSubscriber.cs" />
     <EmbeddedResource Include="KagamiOverlayConfigPanel.resx">
       <DependentUpon>KagamiOverlayConfigPanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,7 +137,14 @@
       <Version>5.0.4</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="resources\kagami\handle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\kagami\debug.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Views\KagamiConfigView.xaml">
       <SubType>Designer</SubType>
@@ -141,10 +155,31 @@
   <PropertyGroup>
     <PostBuildEvent>@echo off
 move Overlay*.dll ..\
+move HtmlRenderer.dll ..\
+move Xilium.CefGlue.dll ..\
 
 mkdir $(TargetDir)bin
 move $(TargetDir)*.dll $(TargetDir)bin\
-move $(TargetDir)bin\$(TargetFileName) $(TargetPath)</PostBuildEvent>
+move $(TargetDir)bin\$(TargetFileName) $(TargetPath)
+move /y $(TargetDir)resources $(TargetDir)..\resources
+
+rmdir /s /q  $(TargetDir)de
+rmdir /s /q  $(TargetDir)es
+rmdir /s /q  $(TargetDir)fr
+rmdir /s /q  $(TargetDir)hu
+rmdir /s /q  $(TargetDir)it
+rmdir /s /q  $(TargetDir)ja-JP
+rmdir /s /q  $(TargetDir)pt-BR
+rmdir /s /q  $(TargetDir)ro
+rmdir /s /q  $(TargetDir)ru
+rmdir /s /q  $(TargetDir)sv
+rmdir /s /q  $(TargetDir)zh-Hans
+
+if $(ConfigurationName)==Release (
+    del /q $(TargetDir)*.pdb
+    del /q $(TargetDir)*.xml
+    del /q $(TargetDir)..\*.dll
+)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>@echo off
@@ -152,6 +187,11 @@ move $(TargetDir)bin\$(TargetFileName) $(TargetPath)</PostBuildEvent>
 if exist $(TargetDir)bin\. (
     rmdir /q /s $(TargetDir)bin
 )
+
+if exist $(TargetDir)..\resources\. (
+    rmdir /q /s $(TargetDir)..\resources
+)
+
 </PreBuildEvent>
   </PropertyGroup>
 </Project>

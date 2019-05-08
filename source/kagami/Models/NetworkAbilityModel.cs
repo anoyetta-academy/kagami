@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if false
+using System;
 using System.Globalization;
 using Prism.Mvvm;
 
@@ -79,3 +80,4 @@ namespace kagami.Models
         }
     }
 }
+#endif

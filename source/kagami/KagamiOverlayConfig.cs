@@ -42,6 +42,15 @@ namespace kagami
             this.GlobalHotkeyTypeChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.GlobalHotkeyType));
         }
 
+        private bool isDesignMode;
+
+        [XmlIgnore]
+        public bool IsDesignMode
+        {
+            get => this.isDesignMode;
+            set => this.SetProperty(ref this.isDesignMode, value);
+        }
+
         private int bufferSizeOfActionEcho = 30;
 
         public int BufferSizeOfActionEcho
@@ -59,8 +68,9 @@ namespace kagami
         }
 
         private string logDirectory = Path.GetFullPath(Path.Combine(
-            KagamiAddon.Instance.ResourcesDirectory,
-            ".."));
+            KagamiAddon.Current.ResourcesDirectory,
+            "..",
+            "logs"));
 
         public string LogDirectory
         {

@@ -118,7 +118,10 @@ namespace kagami.Helpers.Common
                     break;
                 }
 
-                Thread.Sleep((int)this.Interval);
+                if (this.Interval > 0)
+                {
+                    Thread.Sleep((int)this.Interval);
+                }
             }
         }
     }
