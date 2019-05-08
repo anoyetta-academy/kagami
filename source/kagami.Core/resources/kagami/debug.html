@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>kagami</title>
+
+  <style>
+    * {
+      font-family: "Meiryo";
+      font-size: 16px;
+    }
+
+    body, html {
+      margin: 0;
+    }
+
+    html {
+      height: 100%;
+      overflow: hidden;
+      background-color: transparent;
+    }
+
+    .resizeHandle {
+      background-image: url(handle.png);
+      background-position: bottom right;
+      background-repeat: no-repeat;
+      box-sizing: border-box;
+    }
+
+    #content,
+    #content * {
+      color: #E2EBF5;
+      text-shadow: -1px 0 3px #217AA2, 0 1px 3px #217AA2, 1px 0 3px #217AA2, 0 -1px 3px #217AA2;
+      font-weight: 300;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("onOverlayDataUpdate", function (e) {
+      update(e.detail);
+    });
+
+    function update(model) {
+      // show contents...
+    }
+
+    document.addEventListener("onOverlayStateUpdate", function (e) {
+      if (!e.detail.isLocked) {
+        displayResizeHandle();
+      } else {
+        hideResizeHandle();
+      }
+    });
+
+    function displayResizeHandle() {
+      document.documentElement.classList.add("resizeHandle");
+    }
+
+    function hideResizeHandle() {
+      document.documentElement.classList.remove("resizeHandle");
+    }
+  </script>
+</head>
+
+<body id="kagami">
+  <div id="content">
+    NO DATA
+  </div>
+</body>
+</html>

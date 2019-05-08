@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using kagami.Helpers;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
@@ -11,35 +9,14 @@ namespace kagami
     public class KagamiAddon :
         IOverlayAddon
     {
-        public static KagamiAddon Current
+        static KagamiAddon()
         {
-            get;
-            private set;
-        }
-
-        public string ResourcesDirectory
-        {
-            get;
-            private set;
-        }
-
-        public KagamiOverlayConfig Config
-        {
-            get;
-            private set;
-        }
-
-        public KagamiOverlay Overlay
-        {
-            get;
-            private set;
+            AssemblyResolver.Initialize();
         }
 
         public KagamiAddon()
         {
-            Current = this;
-
-            AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
+            this.core = new KagamiAddonCore();
 
             var asm = Assembly.GetCallingAssembly();
             if (string.IsNullOrEmpty(asm.Location))
@@ -47,89 +24,33 @@ namespace kagami
                 asm = Assembly.GetExecutingAssembly();
             }
 
-            this.ResourcesDirectory = Path.Combine(Path.GetDirectoryName(asm.Location), "resources");
+            this.core.ResourcesDirectory = Path.Combine(
+                Path.GetDirectoryName(asm.Location),
+                "resources");
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            Assembly tryLoadAssembly(
-                string directory,
-                string extension)
-            {
-                var asm = new AssemblyName(args.Name);
+        private dynamic core;
 
-                var asmPath = Path.Combine(directory, asm.Name + extension);
-                if (File.Exists(asmPath))
-                {
-                    return Assembly.LoadFrom(asmPath);
-                }
+        public string Name => this.core.Name;
 
-                return null;
-            }
+        public string Description => this.core.Description;
 
-            var dir = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "bin");
+        public Type OverlayType => this.core.OverlayType;
 
-            foreach (var directory in new[] { dir })
-            {
-                var asm = tryLoadAssembly(directory, ".dll");
-                if (asm != null)
-                {
-                    return asm;
-                }
-            }
+        public Type OverlayConfigType => this.core.OverlayConfigType;
 
-            return null;
-        }
+        public Type OverlayConfigControlType => this.core.OverlayConfigControlType;
 
-        public string Name => $"kagami";
+        public Control CreateOverlayConfigControlInstance(IOverlay overlay) => this.core.CreateOverlayConfigControlInstance(overlay);
 
-        public string Description => throw new NotImplementedException();
+        public IOverlayConfig CreateOverlayConfigInstance(string name) => this.core.CreateOverlayConfigInstance(name);
 
-        public Type OverlayType => typeof(KagamiOverlay);
-
-        public Type OverlayConfigType => typeof(KagamiOverlayConfig);
-
-        public Type OverlayConfigControlType => typeof(KagamiOverlayConfigPanel);
-
-        public Control CreateOverlayConfigControlInstance(IOverlay overlay) => new KagamiOverlayConfigPanel(overlay as KagamiOverlay);
-
-        public IOverlayConfig CreateOverlayConfigInstance(string name) => new KagamiOverlayConfig(name);
-
-        public IOverlay CreateOverlayInstance(IOverlayConfig config)
-        {
-            this.Config = config as KagamiOverlayConfig;
-            this.Initialize();
-            this.Overlay = new KagamiOverlay(this.Config);
-            return this.Overlay;
-        }
+        public IOverlay CreateOverlayInstance(IOverlayConfig config) => this.core.CreateOverlayInstance(config);
 
         public void Dispose()
         {
-            XIVLogSubscriber.Instance.Stop();
-            FFXIVPluginHelper.Instance.Stop();
-            SharlayanHelper.Instance.Stop();
-
-            AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
-        }
-
-        private void Initialize()
-        {
-            Task.Run(async () =>
-            {
-                await Task.Delay(500);
-
-                FFXIVPluginHelper.Instance.Start();
-                SharlayanHelper.Instance.Start();
-
-                // Actionリストを取得しておく
-                var a = SharlayanHelper.Instance.GetActionInfo(0);
-
-                await Task.Delay(100);
-
-                XIVLogSubscriber.Instance.Start();
-            });
+            this.core.Dispose();
+            this.core = null;
         }
     }
 }
