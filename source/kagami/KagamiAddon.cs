@@ -49,8 +49,11 @@ namespace kagami
 
         public void Dispose()
         {
-            this.core.Dispose();
-            this.core = null;
+            if (this.core != null)
+            {
+                this.core.Dispose();
+                this.core = null;
+            }
         }
     }
 }
