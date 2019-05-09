@@ -202,6 +202,8 @@ namespace kagami.Models
 
             model.PlayerName = "Anoyetta Anon";
             model.PlayerJob = "SCH";
+            model.EncDPS = 3567;
+            model.Duration = TimeSpan.FromMinutes(10);
             model.Time = now;
 
             model.AddRange(new[]
