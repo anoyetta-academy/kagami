@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Media;
+using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using Advanced_Combat_Tracker;
+using kagami.Helpers;
 using kagami.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -183,5 +188,77 @@ namespace kagami.ViewModels
         }
 
         #endregion Utility commands
+
+        #region Download action icons
+
+        private DelegateCommand downloadActionIconsCommand;
+
+        public DelegateCommand DownloadActionIconsCommand =>
+            this.downloadActionIconsCommand ?? (this.downloadActionIconsCommand = new DelegateCommand(this.ExecuteDownloadActionIconsCommand));
+
+        private static readonly uint ActionIconMaxCount = 200000;
+        private static readonly string ActionIconCodeFormat = "000000";
+
+        private async void ExecuteDownloadActionIconsCommand()
+        {
+            await DownloadActionsIconsAsync();
+        }
+
+        private async Task DownloadActionsIconsAsync() => await Task.Run(async () =>
+        {
+            var iconCodeList = new List<int>((int)ActionIconMaxCount);
+
+            for (uint i = 0; i <= ActionIconMaxCount; i++)
+            {
+                var info = SharlayanHelper.Instance.GetActionInfo(i);
+                if (info != null)
+                {
+                    iconCodeList.Add(info.Icon);
+                }
+
+                await Task.Delay(0);
+            }
+
+            iconCodeList = iconCodeList.Distinct().ToList();
+
+            Logger.Info($"Download {iconCodeList.Count:N0} action icons.");
+
+            using (var wc = new WebClient())
+            {
+                var counter = 0;
+                foreach (var iconCode in iconCodeList)
+                {
+                    var directoryCode = (iconCode / 1000) * 1000;
+
+                    var uri = $"https://xivapi.com/i/{formatCode(directoryCode)}/{formatCode(iconCode)}.png";
+                    var destination = Path.Combine(
+                        KagamiAddonCore.Current.ResourcesDirectory,
+                        "kagami",
+                        "action_icons",
+                        $"{formatCode(iconCode)}.png");
+
+                    if (File.Exists(destination))
+                    {
+                        File.Delete(destination);
+                    }
+
+                    await wc.DownloadFileTaskAsync(uri, destination);
+
+                    counter++;
+
+                    if ((counter % 20) == 0)
+                    {
+                        Logger.Info($"{counter:N0} / {iconCodeList.Count:N0}");
+                        await Task.Delay(500);
+                    }
+                }
+
+                Logger.Info($"{counter:N0} / {iconCodeList.Count:N0}, Download is completed.");
+            }
+
+            string formatCode(int code) => code.ToString(ActionIconCodeFormat);
+        });
+
+        #endregion Download action icons
     }
 }

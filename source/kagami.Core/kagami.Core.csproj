@@ -141,6 +141,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="resources\kagami\action_icons\_dummy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\kagami\handle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

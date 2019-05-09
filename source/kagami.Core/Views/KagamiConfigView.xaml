@@ -156,7 +156,22 @@
                 Command="{Binding OpenGhostFileCommand, Mode=OneWay}" />
             </DockPanel>
           </StackPanel>
-          <!-- General end -->
+          <!-- kagami end -->
+
+          <!-- utility start -->
+          <Label Content="Utility" FontWeight="Bold" Margin="0 15 0 0" />
+          <StackPanel Margin="10 5 0 0">
+            <Button
+              Margin="0 0 0 0"
+              Padding="0 0"
+              HorizontalAlignment="Left"
+              Background="Transparent"
+              Foreground="Blue"
+              BorderThickness="0"
+              Content="Download action icons"
+              Command="{Binding DownloadActionIconsCommand, Mode=OneWay}" />
+          </StackPanel>
+          <!-- utility end -->
         </StackPanel>
       </Grid>
     </ScrollViewer>
