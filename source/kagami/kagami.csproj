@@ -120,11 +120,6 @@
 if exist $(TargetDir)bin\. (
     rmdir /q /s $(TargetDir)bin
 )
-
-if exist $(TargetDir)..\resources\. (
-    rmdir /q /s $(TargetDir)..\resources
-)
-
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
@@ -136,7 +131,8 @@ move Xilium.CefGlue.dll ..\
 mkdir $(TargetDir)bin
 move $(TargetDir)*.dll $(TargetDir)bin\
 move $(TargetDir)bin\kagami.dll $(TargetDir)
-move /y $(TargetDir)resources $(TargetDir)..\resources
+xcopy /e /y $(TargetDir)resources $(TargetDir)..\resources\
+rmdir /s /q $(TargetDir)resources
 
 rmdir /s /q  $(TargetDir)de
 rmdir /s /q  $(TargetDir)es
