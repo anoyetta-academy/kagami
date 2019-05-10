@@ -7,18 +7,22 @@
 
   <style>
     * {
-      font-family: "Meiryo";
+      font-family: Ricty, Consolas, monospace;
       font-size: 16px;
     }
 
-    body, html {
+    html {
       margin: 0;
+    }
+
+    body {
+      margin: 8px;
     }
 
     html {
       height: 100%;
       overflow: hidden;
-      background-color: transparent;
+      background-color: rgba(0, 0, 0, 0.3);
     }
 
     .resizeHandle {
@@ -30,8 +34,8 @@
 
     #content,
     #content * {
-      color: #E2EBF5;
-      text-shadow: -1px 0 3px #217AA2, 0 1px 3px #217AA2, 1px 0 3px #217AA2, 0 -1px 3px #217AA2;
+      color: #eaf4fc;
+      text-shadow: -1px 0 3px #0f2350, 0 1px 3px #0f2350, 1px 0 3px #0f2350, 0 -1px 3px #0f2350;
       font-weight: 300;
     }
   </style>
@@ -41,8 +45,21 @@
       update(e.detail);
     });
 
+    // update
+    // update content to show.
     function update(model) {
-      // show contents...
+      var content = document.getElementById('content');
+
+      // not active? (not in combat)
+      if (!model.isActive) {
+        content.innerText = "INACTIVE"
+        return;
+      }
+
+      // show data model for debug
+      var text = "";
+      text = JSON.stringify(model, null, 2);
+      content.innerHTML = "<pre>\n" + text + "</pre>\n";
     }
 
     document.addEventListener("onOverlayStateUpdate", function (e) {
@@ -69,3 +86,102 @@
   </div>
 </body>
 </html>
+
+<!--
+Sample Data Model
+
+var model =
+{
+  "player": "Anoyetta Anon",
+  "job": "SCH",
+  "encDPS": 3567.0,
+  "duration": "00:10:00",
+  "zone": "Unknown Zone",
+  "time": "2019-05-10 09:54:47.385",
+  "isActive": true,
+  "actions": [
+    {
+      "seq": 24,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:44.885",
+      "actor": "Anoyetta Anon",
+      "id": 7435,
+      "name": "魔炎法",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 22,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:42.385",
+      "actor": "Anoyetta Anon",
+      "id": 177,
+      "name": "ミアズラ",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 23,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:42.385",
+      "actor": "Anoyetta Anon",
+      "id": 9618,
+      "name": "エナジードレイン",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 20,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:39.885",
+      "actor": "Anoyetta Anon",
+      "id": 179,
+      "name": "シャドウフレア",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 21,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:39.885",
+      "actor": "Anoyetta Anon",
+      "id": 7436,
+      "name": "連環計",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 18,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:37.385",
+      "actor": "Anoyetta Anon",
+      "id": 178,
+      "name": "バイオラ",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 19,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:37.385",
+      "actor": "Anoyetta Anon",
+      "id": 9618,
+      "name": "エナジードレイン",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 17,
+      "source": null,
+      "timestamp": "2019-05-10 09:54:34.885",
+      "actor": "Anoyetta Anon",
+      "id": 168,
+      "name": "ミアズマ",
+      "category": 2,
+      "recastTime": 2.5
+    }
+  ]
+};
+
+document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: model }));
+-->
