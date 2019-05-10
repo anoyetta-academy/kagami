@@ -1,4 +1,5 @@
 ﻿using System;
+using kagami.ViewModels;
 using Newtonsoft.Json;
 using Prism.Mvvm;
 
@@ -36,12 +37,21 @@ namespace kagami.Models
 
         private DateTime timestamp;
 
-        [JsonProperty("timestamp")]
+        [JsonIgnore]
         public DateTime Timestamp
         {
             get => this.timestamp;
-            set => this.SetProperty(ref this.timestamp, value);
+            set
+            {
+                if (this.SetProperty(ref this.timestamp, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.TimestampText));
+                }
+            }
         }
+
+        [JsonProperty("timestamp")]
+        public string TimestampText => this.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
         private string actor;
 
@@ -58,7 +68,13 @@ namespace kagami.Models
         public uint ID
         {
             get => this.id;
-            set => this.SetProperty(ref this.id, value);
+            set
+            {
+                if (this.SetProperty(ref this.id, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.Icon));
+                }
+            }
         }
 
         private string name;
@@ -69,6 +85,9 @@ namespace kagami.Models
             get => this.name;
             set => this.SetProperty(ref this.name, value);
         }
+
+        [JsonProperty("icon")]
+        public string Icon => $"{this.id.ToString(KagamiConfigViewModel.ActionIconCodeFormat)}.png";
 
         private ActionCategory category;
 

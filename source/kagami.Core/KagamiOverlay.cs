@@ -56,12 +56,13 @@ namespace kagami
                     if (FFXIVPluginHelper.Instance.FFXIVProcess == null)
                     {
                         this.timer.Interval = LongInterval;
-                        return;
                     }
-
-                    if (this.timer.Interval == LongInterval)
+                    else
                     {
-                        this.timer.Interval = this.config.PollingInterval;
+                        if (this.timer.Interval == LongInterval)
+                        {
+                            this.timer.Interval = this.config.PollingInterval;
+                        }
                     }
                 }
                 else
@@ -94,5 +95,7 @@ namespace kagami
                 this.isUpdating = false;
             }
         }
+
+        public void ClearJsonCache() => this.previousJson = string.Empty;
     }
 }
