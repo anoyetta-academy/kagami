@@ -174,6 +174,7 @@ namespace kagami.ViewModels
         private void ExecuteReloadOverlayCommand()
         {
             KagamiAddonCore.Current.Overlay.Navigate(this.config.Url);
+            (KagamiAddonCore.Current.Overlay as KagamiOverlay)?.ClearJsonCache();
             SystemSounds.Asterisk.Play();
         }
 
@@ -197,7 +198,7 @@ namespace kagami.ViewModels
             this.downloadActionIconsCommand ?? (this.downloadActionIconsCommand = new DelegateCommand(this.ExecuteDownloadActionIconsCommand));
 
         private static readonly uint ActionIconMaxCount = 200000;
-        private static readonly string ActionIconCodeFormat = "000000";
+        public static readonly string ActionIconCodeFormat = "000000";
 
         private async void ExecuteDownloadActionIconsCommand()
         {
