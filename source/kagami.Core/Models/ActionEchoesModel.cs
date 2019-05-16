@@ -116,22 +116,25 @@ namespace kagami.Models
             var data = this.Config.IsDesignMode ? CreateDesignModeDataModel() : this;
             var json = string.Empty;
 
-            if (ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter != null)
+            if (!this.Config.IsDesignMode)
             {
-                var dpsList = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
-                var dps = dpsList.FirstOrDefault(x =>
-                    x.Name == this.PlayerName ||
-                    x.Name == "YOU");
+                if (ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter != null)
+                {
+                    var dpsList = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+                    var dps = dpsList.FirstOrDefault(x =>
+                        x.Name == this.PlayerName ||
+                        x.Name == "YOU");
 
-                this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
-                this.Duration = dps?.Duration ?? TimeSpan.Zero;
-                this.IsActive = true;
-            }
-            else
-            {
-                this.EncDPS = 0;
-                this.Duration = TimeSpan.Zero;
-                this.IsActive = false;
+                    this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
+                    this.Duration = dps?.Duration ?? TimeSpan.Zero;
+                    this.IsActive = true;
+                }
+                else
+                {
+                    this.EncDPS = 0;
+                    this.Duration = TimeSpan.Zero;
+                    this.IsActive = false;
+                }
             }
 
             lock (this)
