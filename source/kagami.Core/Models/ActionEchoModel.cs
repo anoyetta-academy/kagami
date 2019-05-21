@@ -87,7 +87,16 @@ namespace kagami.Models
         }
 
         [JsonProperty("icon")]
-        public string Icon => $"{this.id.ToString(KagamiConfigViewModel.ActionIconCodeFormat)}.png";
+        public string Icon => $"{this.iconCode.ToString(KagamiConfigViewModel.ActionIconCodeFormat)}.png";
+
+        private int iconCode;
+
+        [JsonIgnore]
+        public int IconCode
+        {
+            get => this.iconCode;
+            set => this.SetProperty(ref this.iconCode, value);
+        }
 
         private ActionCategory category;
 

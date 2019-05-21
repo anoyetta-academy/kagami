@@ -188,6 +188,7 @@ namespace kagami
                         var info = SharlayanHelper.Instance.GetActionInfo(echo.ID);
                         if (info != null)
                         {
+                            echo.IconCode = info.Icon;
                             echo.Category = (ActionCategory)Enum.ToObject(typeof(ActionCategory), info.ActionCategory);
                             echo.RecastTime = (float)info.RecastTime;
                         }
