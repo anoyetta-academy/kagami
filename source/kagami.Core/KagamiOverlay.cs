@@ -38,7 +38,7 @@ namespace kagami
 
         private static readonly int LongInterval = 3000;
         private volatile bool isUpdating = false;
-        private volatile string previousJson = string.Empty;
+        private long previousSeq = 0;
 
         protected override async void Update()
         {
@@ -70,11 +70,12 @@ namespace kagami
                     this.timer.Interval = LongInterval;
                 }
 
-                var json = await ActionEchoesModel.Instance.ParseJsonAsync();
-
-                if (this.previousJson != json)
+                if (this.previousSeq != ActionEchoesModel.Instance.Seq ||
+                    this.Config.IsDesignMode)
                 {
-                    this.previousJson = json;
+                    this.previousSeq = ActionEchoesModel.Instance.Seq;
+
+                    var json = await ActionEchoesModel.Instance.ParseJsonAsync();
 
                     var updateScript =
                         $"var model =\n{ json };\n\n" +
@@ -96,6 +97,6 @@ namespace kagami
             }
         }
 
-        public void ClearJsonCache() => this.previousJson = string.Empty;
+        public void ClearJsonCache() => this.previousSeq = 0;
     }
 }

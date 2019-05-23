@@ -24,6 +24,9 @@ namespace kagami.Models
         #endregion Singleton
 
         [JsonIgnore]
+        public long Seq { get; private set; } = 0L;
+
+        [JsonIgnore]
         public KagamiOverlayConfig Config => KagamiAddonCore.Current.Config as KagamiOverlayConfig;
 
         [JsonProperty("player")]
@@ -92,6 +95,7 @@ namespace kagami.Models
             lock (this.echoes)
             {
                 this.echoes.Clear();
+                this.Seq = 0;
             }
         }
 
@@ -100,14 +104,7 @@ namespace kagami.Models
             lock (this.echoes)
             {
                 this.echoes.Add(model);
-            }
-        }
-
-        public void AddRange(IEnumerable<ActionEchoModel> models)
-        {
-            lock (this.echoes)
-            {
-                this.echoes.AddRange(models);
+                this.Seq++;
             }
         }
 
