@@ -2,46 +2,21 @@
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using Prism.Mvvm;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
 {
     public class KagamiAddon :
-        BindableBase,
         IOverlayAddon
     {
-        private static readonly Lazy<KagamiAddon> LazyInstance = new Lazy<KagamiAddon>();
-
-        public static KagamiAddon Instance => LazyInstance.Value;
-
-        private string resourcesDirectory;
-
-        public string ResourcesDirectory
+        static KagamiAddon()
         {
-            get => this.resourcesDirectory;
-            set => this.SetProperty(ref this.resourcesDirectory, value);
-        }
-
-        private string updateMessage;
-
-        public string UpdateMessage
-        {
-            get => this.updateMessage;
-            set => this.SetProperty(ref this.updateMessage, value);
-        }
-
-        private KagamiOverlayConfig config;
-
-        public KagamiOverlayConfig Config
-        {
-            get => this.config;
-            set => this.SetProperty(ref this.config, value);
+            AssemblyResolver.Initialize();
         }
 
         public KagamiAddon()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
+            this.core = new KagamiAddonCore();
 
             var asm = Assembly.GetCallingAssembly();
             if (string.IsNullOrEmpty(asm.Location))
@@ -49,61 +24,36 @@ namespace kagami
                 asm = Assembly.GetExecutingAssembly();
             }
 
-            this.ResourcesDirectory = Path.Combine(Path.GetDirectoryName(asm.Location), "resources");
+            this.core.ResourcesDirectory = Path.Combine(
+                Path.GetDirectoryName(asm.Location),
+                "resources");
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            Assembly tryLoadAssembly(
-                string directory,
-                string extension)
-            {
-                var asm = new AssemblyName(args.Name);
+        private dynamic core;
 
-                var asmPath = Path.Combine(directory, asm.Name + extension);
-                if (File.Exists(asmPath))
-                {
-                    return Assembly.LoadFrom(asmPath);
-                }
+        public string Name => this.core.Name;
 
-                return null;
-            }
+        public string Description => this.core.Description;
 
-            var dir = Path.Combine(
-                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "bin");
+        public Type OverlayType => this.core.OverlayType;
 
-            foreach (var directory in new[] { dir })
-            {
-                var asm = tryLoadAssembly(directory, ".dll");
-                if (asm != null)
-                {
-                    return asm;
-                }
-            }
+        public Type OverlayConfigType => this.core.OverlayConfigType;
 
-            return null;
-        }
+        public Type OverlayConfigControlType => this.core.OverlayConfigControlType;
 
-        public string Name => $"kagami";
+        public Control CreateOverlayConfigControlInstance(IOverlay overlay) => this.core.CreateOverlayConfigControlInstance(overlay);
 
-        public string Description => throw new NotImplementedException();
+        public IOverlayConfig CreateOverlayConfigInstance(string name) => this.core.CreateOverlayConfigInstance(name);
 
-        public Type OverlayType => typeof(KagamiOverlay);
-
-        public Type OverlayConfigType => typeof(KagamiOverlayConfig);
-
-        public Type OverlayConfigControlType => typeof(KagamiOverlayConfigPanel);
-
-        public Control CreateOverlayConfigControlInstance(IOverlay overlay) => new KagamiOverlayConfigPanel(overlay as KagamiOverlay);
-
-        public IOverlayConfig CreateOverlayConfigInstance(string name) => this.Config = new KagamiOverlayConfig(name);
-
-        public IOverlay CreateOverlayInstance(IOverlayConfig config) => new KagamiOverlay(config as KagamiOverlayConfig);
+        public IOverlay CreateOverlayInstance(IOverlayConfig config) => this.core.CreateOverlayInstance(config);
 
         public void Dispose()
         {
-            AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
+            if (this.core != null)
+            {
+                this.core.Dispose();
+                this.core = null;
+            }
         }
     }
 }

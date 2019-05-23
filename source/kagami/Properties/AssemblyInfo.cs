@@ -14,4 +14,3 @@ using System.Windows;
     ResourceDictionaryLocation.None,
     ResourceDictionaryLocation.SourceAssembly
 )]
-[assembly: AssemblyFileVersion("0.0.0.0")]
