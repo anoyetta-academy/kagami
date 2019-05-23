@@ -83,6 +83,8 @@ namespace kagami
         private static readonly string ChangedZoneLog = "01:Changed Zone to";
         private static readonly string ChangedPrimaryPlayerLog = "02:Changed primary player";
 
+        private volatile string previousActionKey = string.Empty;
+
         private async void StoreLog()
         {
             if (this.Config == null)
@@ -113,8 +115,9 @@ namespace kagami
                     this.previousPlayerName = player.Name;
 
                     // 15:10078E31:Anoyetta Anon:A5:サモン:
+                    // 16:10078E31:Anoyetta Anon:B1:ミアズラ:
                     this.networkAbilityRegex = new Regex(
-                        $" 15:[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+):[0-9a-fA-F]",
+                        $" (15|16):[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+):[0-9a-fA-F]",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                     // 19:Anoyetta Anon was defeated by ガルーダ.
@@ -140,6 +143,7 @@ namespace kagami
                     if (!line.Contains("] 01:") &&
                         !line.Contains("] 02:") &&
                         !line.Contains("] 15:") &&
+                        !line.Contains("] 16:") &&
                         !line.Contains("] 19:"))
                     {
                         continue;
@@ -162,9 +166,23 @@ namespace kagami
                             continue;
                         }
 
+                        var timestamp = line.Substring(0, 15).TrimEnd();
+                        var actionID = match.Groups["ActionID"].ToString();
+                        var actionName = match.Groups["ActionName"].ToString();
+
+                        var actionKey = $"{timestamp}-{actionID}-{actionName}";
+                        if (string.Equals(
+                            this.previousActionKey,
+                            actionKey,
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        this.previousActionKey = actionKey;
+
                         var echo = new ActionEchoModel();
 
-                        var timestamp = line.Substring(0, 15).TrimEnd();
                         if (DateTime.TryParse(timestamp, out DateTime d))
                         {
                             echo.Timestamp = d;
@@ -177,13 +195,12 @@ namespace kagami
                         echo.Source = line;
                         echo.Actor = player.Name;
 
-                        var id = match.Groups["ActionID"].ToString();
-                        if (uint.TryParse(id, NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out uint i))
+                        if (uint.TryParse(actionID, NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out uint i))
                         {
                             echo.ID = i;
                         }
 
-                        echo.Name = match.Groups["ActionName"].ToString();
+                        echo.Name = actionName;
 
                         var info = SharlayanHelper.Instance.GetActionInfo(echo.ID);
                         if (info != null)
