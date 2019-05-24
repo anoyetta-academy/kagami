@@ -15,11 +15,11 @@
    ```
    OverlayPlugin
     ├ addons
-    │  ├ bin
-    │  ├ kagami.dll
-    │  └ kagami.Core.dll
+    │  ├ bin (new)
+    │  ├ kagami.dll (new)
+    │  └ kagami.Core.dll (new)
     └ resources
-       └ kagami
+       └ kagami (new)
    ```
 
 ## 使い方
