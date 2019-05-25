@@ -117,7 +117,7 @@ namespace kagami
                     // 15:10078E31:Anoyetta Anon:A5:サモン:
                     // 16:10078E31:Anoyetta Anon:B1:ミアズラ:
                     this.networkAbilityRegex = new Regex(
-                        $" (15|16):[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+):[0-9a-fA-F]",
+                        $" (15|16):[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                     // 19:Anoyetta Anon was defeated by ガルーダ.
