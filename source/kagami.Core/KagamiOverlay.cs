@@ -79,7 +79,7 @@ namespace kagami
 
                     var updateScript =
                         $"var model =\n{ json };\n\n" +
-                        "document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: model }));\n";
+                        "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
 
                     this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
                         updateScript,
