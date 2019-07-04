@@ -166,7 +166,7 @@ namespace kagami
                             continue;
                         }
 
-                        var timestamp = line.Substring(0, 15).TrimEnd();
+                        var timestamp = line.Substring(1, 8).TrimEnd();
                         var actionID = match.Groups["ActionID"].ToString();
                         var actionName = match.Groups["ActionName"].ToString();
 
