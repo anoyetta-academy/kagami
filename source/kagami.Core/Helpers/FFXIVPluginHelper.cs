@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Advanced_Combat_Tracker;
+using FFXIV_ACT_Plugin.Common;
 using kagami.Helpers.Common;
 
 namespace kagami.Helpers
@@ -24,20 +24,13 @@ namespace kagami.Helpers
 
         private ThreadWorker attachWorker;
 
-        private dynamic ffxivPlugin;
-        private dynamic ffxivPluginConfig;
-        private dynamic ffxivPluginLogParse;
+        private dynamic plugin;
+        private IDataRepository DataRepository { get; set; }
+        private IDataSubscription DataSubscription { get; set; }
 
-        public Process FFXIVProcess => this.ffxivPluginConfig?.Process;
+        public Process FFXIVProcess => this.DataRepository?.GetCurrentFFXIVProcess();
 
-        public string FFXIVPluginLanguage => (this.ffxivPluginLogParse?.Settings?.LanguageID ?? 0) switch
-        {
-            1 => "English",
-            2 => "French",
-            3 => "German",
-            4 => "Japanese",
-            _ => "English",
-        };
+        public string FFXIVPluginLanguage => this.DataRepository?.GetSelectedLanguageID().ToString();
 
         private static readonly double AttachSubscribeInterval = 3000;
 
@@ -50,54 +43,21 @@ namespace kagami.Helpers
                     return;
                 }
 
-                if (this.ffxivPlugin == null)
+                var ffxivPlugin = (
+                    from x in ActGlobals.oFormActMain.ActPlugins
+                    where
+                    x.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
+                    x.lblPluginStatus.Text.ToUpper().Contains("FFXIV Plugin Started.".ToUpper())
+                    select
+                    x.pluginObj).FirstOrDefault();
+
+                if (ffxivPlugin != null)
                 {
-                    this.ffxivPlugin = (
-                        from x in ActGlobals.oFormActMain.ActPlugins
-                        where
-                        x.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
-                        x.lblPluginStatus.Text.ToUpper().Contains("FFXIV Plugin Started.".ToUpper())
-                        select
-                        x.pluginObj).FirstOrDefault();
-                }
+                    this.plugin = ffxivPlugin;
+                    this.DataRepository = this.plugin.DataRepository;
+                    this.DataSubscription = this.plugin.DataSubscription;
 
-                if (this.ffxivPlugin != null &&
-                    this.ffxivPluginConfig == null)
-                {
-                    var fi = this.ffxivPlugin.GetType().GetField(
-                        "_Memory",
-                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                    var memory = fi?.GetValue(this.ffxivPlugin);
-                    if (memory == null)
-                    {
-                        return;
-                    }
-
-                    fi = memory.GetType().GetField(
-                        "_config",
-                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                    this.ffxivPluginConfig = fi?.GetValue(memory);
-
-                    Logger.Info("FFXIV_ACT_Plugin.Config attached.");
-                }
-
-                if (this.ffxivPlugin != null &&
-                    this.ffxivPluginLogParse == null)
-                {
-                    var fi = this.ffxivPlugin.GetType().GetField(
-                        "_LogParse",
-                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    this.ffxivPluginLogParse = fi?.GetValue(this.ffxivPlugin);
-
-                    Logger.Info("FFXIV_ACT_Plugin.LogParse attached.");
-                }
-
-                if (this.ffxivPlugin != null &&
-                    this.ffxivPluginConfig != null &&
-                    this.ffxivPluginLogParse != null)
-                {
-                    Thread.Sleep(TimeSpan.FromMilliseconds(AttachSubscribeInterval));
+                    Logger.Info("FFXIV_ACT_Plugin attached.");
                 }
             },
             AttachSubscribeInterval,
@@ -115,9 +75,9 @@ namespace kagami.Helpers
                 this.attachWorker = null;
             }
 
-            this.ffxivPlugin = null;
-            this.ffxivPluginConfig = null;
-            this.ffxivPluginLogParse = null;
+            this.plugin = null;
+            this.DataRepository = null;
+            this.DataSubscription = null;
         }
     }
 }

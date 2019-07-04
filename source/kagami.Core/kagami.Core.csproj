@@ -38,6 +38,10 @@
       <HintPath>..\Thirdparty\ACT\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FFXIV_ACT_Plugin.Common">
+      <HintPath>..\..\..\..\ACT.ProvokeAssistant\source\ThirdPaty\SDK\FFXIV_ACT_Plugin.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="HtmlRenderer">
       <HintPath>..\Thirdparty\OverlayPlugin\HtmlRenderer.dll</HintPath>
     </Reference>
@@ -151,6 +155,12 @@
     <Content Include="resources\kagami\debug.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\kagami\job_icons\DNC.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\kagami\job_icons\GNB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\kagami\job_icons\svg\ACN.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -190,6 +200,9 @@
     <Content Include="resources\kagami\job_icons\svg\CUL.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\kagami\job_icons\svg\DNC.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\kagami\job_icons\svg\DRG.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -200,6 +213,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\kagami\job_icons\svg\GLA.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\kagami\job_icons\svg\GNB.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\kagami\job_icons\svg\GSM.svg">

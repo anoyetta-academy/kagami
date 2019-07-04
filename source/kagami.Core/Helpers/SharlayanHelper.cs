@@ -95,7 +95,8 @@ namespace kagami.Helpers
 
                     MemoryHandler.Instance.SetProcess(
                         model,
-                        ffxivLanguage);
+                        gameLanguage: ffxivLanguage,
+                        useLocalCache: false);
 
                     Logger.Info("Sharlayan attached.");
                 }

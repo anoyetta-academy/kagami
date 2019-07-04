@@ -35,6 +35,9 @@ namespace kagami.Models
         [JsonProperty("job")]
         public string PlayerJob { get; set; }
 
+        [JsonProperty("encounter")]
+        public string Encounter { get; set; }
+
         [JsonProperty("encDPS")]
         public double EncDPS { get; set; }
 
@@ -115,16 +118,19 @@ namespace kagami.Models
 
             if (!this.Config.IsDesignMode)
             {
-                if (ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter != null)
+                var encounter = ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter;
+
+                if (encounter != null)
                 {
-                    var dpsList = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+                    var dpsList = encounter.GetAllies();
                     var dps = dpsList.FirstOrDefault(x =>
                         x.Name == this.PlayerName ||
                         x.Name == "YOU");
 
+                    this.Encounter = encounter.CharName;
                     this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
                     this.Duration = dps?.Duration ?? TimeSpan.Zero;
-                    this.IsActive = true;
+                    this.IsActive = encounter.EndTime < DateTime.Now;
                 }
                 else
                 {
