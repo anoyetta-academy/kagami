@@ -85,7 +85,7 @@ namespace kagami.Models
                     x.Timestamp <= this.Time &&
                     x.Timestamp >= this.Time.AddSeconds(this.Config.BufferSizeOfActionEcho * -1)
                     orderby
-                    x.Timestamp descending
+                    x.Seq descending
                     select
                     x).ToArray();
 
