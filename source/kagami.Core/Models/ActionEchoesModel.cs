@@ -119,7 +119,6 @@ namespace kagami.Models
             if (!this.Config.IsDesignMode)
             {
                 var encounter = ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter;
-
                 if (encounter != null)
                 {
                     var dpsList = encounter.GetAllies();
@@ -127,10 +126,10 @@ namespace kagami.Models
                         x.Name == this.PlayerName ||
                         x.Name == "YOU");
 
-                    this.Encounter = encounter.CharName;
+                    this.Encounter = encounter.Title;
                     this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
                     this.Duration = dps?.Duration ?? TimeSpan.Zero;
-                    this.IsActive = encounter.EndTime < DateTime.Now;
+                    this.IsActive = true;
                 }
                 else
                 {

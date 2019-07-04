@@ -43,6 +43,11 @@ namespace kagami.Helpers
                     return;
                 }
 
+                if (this.plugin != null)
+                {
+                    return;
+                }
+
                 var ffxivPlugin = (
                     from x in ActGlobals.oFormActMain.ActPlugins
                     where
