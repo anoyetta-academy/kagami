@@ -26,3 +26,11 @@
 3. オーバーレイの Type で kagami を選択する
 4. OK をクリックする
 5. kagami オーバーレイの設定が表示されたら URL に使用したいスキンの URL を入力する
+
+## スキン
+### ram（発案者） さんのスキン
+* レポジトリ
+https://github.com/ramram1048/kagamireact  
+* スキンURL
+```https://ramram1048.github.io/kagamireact/```
+
