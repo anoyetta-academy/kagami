@@ -80,13 +80,15 @@ namespace kagami
         private Regex defeatedRegex;
         private string previousPlayerName;
 
+        /*
         private static readonly string ChangedZoneLog = "01:Changed Zone to";
         private static readonly string ChangedPrimaryPlayerLog = "02:Changed primary player";
+        */
 
         private volatile string previousActionID = string.Empty;
         private DateTime previousActionTimestamp = DateTime.MinValue;
 
-        private async void StoreLog()
+        private void StoreLog()
         {
             if (this.Config == null)
             {

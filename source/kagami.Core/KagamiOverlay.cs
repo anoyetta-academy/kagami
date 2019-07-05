@@ -105,7 +105,14 @@ namespace kagami
 
                 if (isNeedsSave)
                 {
+                    var script = "document.dispatchEvent(new CustomEvent('onEndEncounter', null));\n";
+                    this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
+                        script,
+                        null,
+                        0);
+
                     await ActionEchoesModel.Instance.SaveLogAsync();
+                    ActionEchoesModel.Instance.Clear();
                 }
             }
             catch (Exception ex)
