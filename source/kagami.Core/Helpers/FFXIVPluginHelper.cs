@@ -106,10 +106,13 @@ namespace kagami.Helpers
 
         public Combatant CurrentTarget { get; private set; }
 
+        public Combatant CurrentFocusTarget { get; private set; }
+
         private void DoRefreshCombatant()
         {
             this.CurrentPlayer = this.DataRepository?.GetCombatantList().FirstOrDefault();
             this.CurrentTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.Target);
+            this.CurrentFocusTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.FocusTarget);
         }
     }
 

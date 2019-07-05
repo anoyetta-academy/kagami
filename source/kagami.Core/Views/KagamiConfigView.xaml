@@ -90,6 +90,8 @@
           <Label Content="kagami" FontWeight="Bold" Margin="0 15 0 0" />
           <StackPanel Margin="10 5 0 0">
             <CheckBox Content="Design mode" IsChecked="{Binding Config.IsDesignMode, Mode=TwoWay}" />
+            <CheckBox Content="Enabled target capture" IsChecked="{Binding Config.IsEnableTargetCapture, Mode=TwoWay}" Margin="0 5 0 0" />
+            <CheckBox Content="Enabled focus target capture" IsChecked="{Binding Config.IsEnableFocusTargetCapture, Mode=TwoWay}" Margin="0 5 0 0" />
 
             <Label Content="Buffer size of action echo (sec)" Margin="0 8 0 0" />
             <toolkit:IntegerUpDown Value="{Binding Config.BufferSizeOfActionEcho, Mode=TwoWay}" Minimum="1" Maximum="120" Width="90" />

@@ -108,18 +108,29 @@ namespace kagami
 
                 var player = FFXIVPluginHelper.Instance.CurrentPlayer;
                 var target = FFXIVPluginHelper.Instance.CurrentTarget;
+                var focus = FFXIVPluginHelper.Instance.CurrentFocusTarget;
+
                 if (string.IsNullOrEmpty(player?.Name) &&
-                    string.IsNullOrEmpty(target?.Name))
+                    string.IsNullOrEmpty(target?.Name) &&
+                    string.IsNullOrEmpty(focus?.Name))
                 {
                     interval = LongSleep;
                     return;
                 }
 
                 var actor = player;
-                if (target != null &&
-                    target.type == PC)
+                if (focus != null &&
+                    focus.type == PC)
                 {
-                    actor = target;
+                    actor = focus;
+                }
+                else
+                {
+                    if (target != null &&
+                        target.type == PC)
+                    {
+                        actor = target;
+                    }
                 }
 
                 if (this.previousActorName != actor.Name)
