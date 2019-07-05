@@ -29,8 +29,8 @@
 
 ## スキン
 ### ram（発案者） さんのスキン
-* レポジトリ
+* レポジトリ  
 https://github.com/ramram1048/kagamireact  
-* スキンURL
+* スキンURL  
 ```https://ramram1048.github.io/kagamireact/```
 
