@@ -83,7 +83,8 @@ namespace kagami
         private static readonly string ChangedZoneLog = "01:Changed Zone to";
         private static readonly string ChangedPrimaryPlayerLog = "02:Changed primary player";
 
-        private volatile string previousActionKey = string.Empty;
+        private volatile string previousActionID = string.Empty;
+        private DateTime previousActionTimestamp = DateTime.MinValue;
 
         private async void StoreLog()
         {
@@ -151,47 +152,41 @@ namespace kagami
 
                     try
                     {
-                        if (line.Contains(ChangedZoneLog) ||
-                            line.Contains(ChangedPrimaryPlayerLog) ||
-                            this.defeatedRegex.IsMatch(line))
-                        {
-                            await ActionEchoesModel.Instance.SaveLogAsync();
-                            ActionEchoesModel.Instance.Clear();
-                            continue;
-                        }
-
                         var match = this.networkAbilityRegex.Match(line);
                         if (!match.Success)
                         {
                             continue;
                         }
 
-                        var timestamp = line.Substring(1, 8).TrimEnd();
+                        var t = line.Substring(0, 15)
+                            .TrimEnd()
+                            .Replace("[", string.Empty)
+                            .Replace("]", string.Empty);
+                        if (!DateTime.TryParse(t, out DateTime timestamp))
+                        {
+                            timestamp = DateTime.Now;
+                        }
+
                         var actionID = match.Groups["ActionID"].ToString();
                         var actionName = match.Groups["ActionName"].ToString();
 
-                        var actionKey = $"{timestamp}-{actionID}-{actionName}";
                         if (string.Equals(
-                            this.previousActionKey,
-                            actionKey,
+                            actionID,
+                            this.previousActionID,
                             StringComparison.OrdinalIgnoreCase))
                         {
-                            continue;
+                            if ((timestamp - this.previousActionTimestamp)
+                                < TimeSpan.FromMilliseconds(200))
+                            {
+                                continue;
+                            }
                         }
 
-                        this.previousActionKey = actionKey;
+                        this.previousActionID = actionID;
+                        this.previousActionTimestamp = timestamp;
 
                         var echo = new ActionEchoModel();
-
-                        if (DateTime.TryParse(timestamp, out DateTime d))
-                        {
-                            echo.Timestamp = d;
-                        }
-                        else
-                        {
-                            echo.Timestamp = DateTime.Now;
-                        }
-
+                        echo.Timestamp = timestamp;
                         echo.Source = line;
                         echo.Actor = player.Name;
 

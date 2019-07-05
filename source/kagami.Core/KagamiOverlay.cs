@@ -39,6 +39,7 @@ namespace kagami
         private static readonly int LongInterval = 3000;
         private volatile bool isUpdating = false;
         private long previousSeq = 0;
+        private bool previousStats = false;
 
         protected override async void Update()
         {
@@ -70,15 +71,25 @@ namespace kagami
                     this.timer.Interval = LongInterval;
                 }
 
+                var stats = ActionEchoesModel.Instance.GetEncounterStats();
+                var isNeedsSave = false;
+
                 lock (this)
                 {
                     if (!this.Config.IsDesignMode &&
-                        this.previousSeq == ActionEchoesModel.Instance.Seq)
+                        this.previousSeq == ActionEchoesModel.Instance.Seq &&
+                        this.previousStats == stats)
                     {
                         return;
                     }
 
                     this.previousSeq = ActionEchoesModel.Instance.Seq;
+
+                    if (this.previousStats != stats)
+                    {
+                        this.previousStats = stats;
+                        isNeedsSave = !stats;
+                    }
                 }
 
                 var json = await ActionEchoesModel.Instance.ParseJsonAsync();
@@ -91,6 +102,11 @@ namespace kagami
                     updateScript,
                     null,
                     0);
+
+                if (isNeedsSave)
+                {
+                    await ActionEchoesModel.Instance.SaveLogAsync();
+                }
             }
             catch (Exception ex)
             {

@@ -35,9 +35,6 @@ namespace kagami.Models
         [JsonProperty("job")]
         public string PlayerJob { get; set; }
 
-        [JsonProperty("encounter")]
-        public string Encounter { get; set; }
-
         [JsonProperty("encDPS")]
         public double EncDPS { get; set; }
 
@@ -111,6 +108,9 @@ namespace kagami.Models
             }
         }
 
+        public bool GetEncounterStats()
+            => ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter?.Active ?? false;
+
         public async Task<string> ParseJsonAsync() => await Task.Run(() =>
         {
             var data = this.Config.IsDesignMode ? CreateDesignModeDataModel() : this;
@@ -126,10 +126,9 @@ namespace kagami.Models
                         x.Name == this.PlayerName ||
                         x.Name == "YOU");
 
-                    this.Encounter = encounter.Title;
                     this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
                     this.Duration = dps?.Duration ?? TimeSpan.Zero;
-                    this.IsActive = true;
+                    this.IsActive = encounter.Active;
                 }
                 else
                 {
