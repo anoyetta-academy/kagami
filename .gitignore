@@ -332,3 +332,4 @@ ASALocalRun/
 # kagami Repository settings
 OverlayPlugin/
 *.exe
+/source/deploy
