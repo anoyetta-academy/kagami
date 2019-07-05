@@ -75,10 +75,11 @@ namespace kagami
         }
 
         private static readonly int LongSleep = 3000;
+        private static readonly byte PC = 1;
 
         private Regex networkAbilityRegex;
         private Regex defeatedRegex;
-        private string previousPlayerName;
+        private string previousActorName;
 
         /*
         private static readonly string ChangedZoneLog = "01:Changed Zone to";
@@ -105,28 +106,38 @@ namespace kagami
                     return;
                 }
 
-                var player = SharlayanHelper.Instance.GetCurrentPlayer();
-                if (player == null ||
-                    string.IsNullOrEmpty(player.Name))
+                var player = FFXIVPluginHelper.Instance.CurrentPlayer;
+                var target = FFXIVPluginHelper.Instance.CurrentTarget;
+                if (string.IsNullOrEmpty(player?.Name) &&
+                    string.IsNullOrEmpty(target?.Name))
                 {
                     interval = LongSleep;
                     return;
                 }
 
-                if (this.previousPlayerName != player.Name)
+                var actor = player;
+                if (target != null &&
+                    target.type == PC)
                 {
-                    this.previousPlayerName = player.Name;
+                    actor = target;
+                }
+
+                if (this.previousActorName != actor.Name)
+                {
+                    this.previousActorName = actor.Name;
 
                     // 15:10078E31:Anoyetta Anon:A5:サモン:
                     // 16:10078E31:Anoyetta Anon:B1:ミアズラ:
                     this.networkAbilityRegex = new Regex(
-                        $" (15|16):[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
+                        $" (15|16):[0-9a-fA-F]+:{actor.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                     // 19:Anoyetta Anon was defeated by ガルーダ.
                     this.defeatedRegex = new Regex(
-                        $" 19:{player.Name} was defeated by",
+                        $" 19:{actor.Name} was defeated by",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+                    ActionEchoesModel.Instance.Clear();
                 }
 
                 if (this.networkAbilityRegex == null ||
@@ -136,8 +147,8 @@ namespace kagami
                     return;
                 }
 
-                ActionEchoesModel.Instance.PlayerName = player.Name;
-                ActionEchoesModel.Instance.PlayerJob = player.Job.ToString();
+                ActionEchoesModel.Instance.PlayerName = actor.Name;
+                ActionEchoesModel.Instance.PlayerJob = actor.GetJob().ToString();
 
                 while (this.LogInfoQueue.TryDequeue(out LogLineEventArgs e))
                 {
@@ -190,7 +201,7 @@ namespace kagami
                         var echo = new ActionEchoModel();
                         echo.Timestamp = timestamp;
                         echo.Source = line;
-                        echo.Actor = player.Name;
+                        echo.Actor = actor.Name;
 
                         if (uint.TryParse(actionID, NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out uint i))
                         {

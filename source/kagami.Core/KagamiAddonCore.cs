@@ -75,9 +75,6 @@ namespace kagami
                 FFXIVPluginHelper.Instance.Start();
                 SharlayanHelper.Instance.Start();
 
-                // Actionリストを取得しておく
-                var a = SharlayanHelper.Instance.GetActionInfo(0);
-
                 await Task.Delay(100);
 
                 XIVLogSubscriber.Instance.Start();
