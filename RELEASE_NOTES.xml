@@ -29,4 +29,15 @@
     * PCをターゲットまたはフォーカスターゲットしたときそのPCのアクションをキャプチャーするようにした
     </description>
   </note>
+
+  <note>
+    <version>0.1.1.3200</version>
+    <channel>Beta</channel>
+    <timestamp>2019-07-06T00:39:55.4393806+09:00</timestamp>
+    <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.1.1.3200-Beta/kagami_v0_1_1_3200_Beta.zip</uri>
+    <description>
+    * Beta1.1
+    * ターゲット, フォーカスターゲットのキャプチャーをOFFに出来ない不具合を修正した
+    </description>
+  </note>
 </release_notes>

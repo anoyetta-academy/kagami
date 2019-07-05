@@ -37,6 +37,8 @@ namespace kagami.Helpers
         private static readonly double AttachSubscribeInterval = 3000;
         private static readonly double CombatantSubscribeInterval = 500;
 
+        private KagamiOverlayConfig Config => KagamiAddonCore.Current.Config as KagamiOverlayConfig;
+
         public void Start()
         {
             this.pluginSubscriber = new ThreadWorker(() =>
@@ -111,8 +113,24 @@ namespace kagami.Helpers
         private void DoRefreshCombatant()
         {
             this.CurrentPlayer = this.DataRepository?.GetCombatantList().FirstOrDefault();
-            this.CurrentTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.Target);
-            this.CurrentFocusTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.FocusTarget);
+
+            if (Config.IsEnableTargetCapture)
+            {
+                this.CurrentTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.Target);
+            }
+            else
+            {
+                this.CurrentTarget = null;
+            }
+
+            if (Config.IsEnableFocusTargetCapture)
+            {
+                this.CurrentFocusTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.FocusTarget);
+            }
+            else
+            {
+                this.CurrentFocusTarget = null;
+            }
         }
     }
 
