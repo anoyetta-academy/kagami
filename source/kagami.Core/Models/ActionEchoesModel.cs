@@ -82,7 +82,7 @@ namespace kagami.Models
                     x.Timestamp <= this.Time &&
                     x.Timestamp >= this.Time.AddSeconds(this.Config.BufferSizeOfActionEcho * -1)
                     orderby
-                    x.Timestamp descending
+                    x.Seq descending
                     select
                     x).ToArray();
 
@@ -108,6 +108,9 @@ namespace kagami.Models
             }
         }
 
+        public bool GetEncounterStats()
+            => ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter?.Active ?? false;
+
         public async Task<string> ParseJsonAsync() => await Task.Run(() =>
         {
             var data = this.Config.IsDesignMode ? CreateDesignModeDataModel() : this;
@@ -115,16 +118,17 @@ namespace kagami.Models
 
             if (!this.Config.IsDesignMode)
             {
-                if (ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter != null)
+                var encounter = ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter;
+                if (encounter != null)
                 {
-                    var dpsList = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies();
+                    var dpsList = encounter.GetAllies();
                     var dps = dpsList.FirstOrDefault(x =>
                         x.Name == this.PlayerName ||
                         x.Name == "YOU");
 
                     this.EncDPS = Math.Round(dps?.EncDPS ?? 0);
                     this.Duration = dps?.Duration ?? TimeSpan.Zero;
-                    this.IsActive = true;
+                    this.IsActive = encounter.Active;
                 }
                 else
                 {
@@ -148,8 +152,6 @@ namespace kagami.Models
             return json;
         });
 
-        private int takeCount;
-
         public async Task SaveLogAsync()
         {
             if (this.echoes.Count < 1)
@@ -161,10 +163,16 @@ namespace kagami.Models
 
             lock (this)
             {
-                this.takeCount++;
+                var encounter = ActGlobals.oFormActMain?.ActiveZone?.ActiveEncounter;
+                var zone = !string.IsNullOrEmpty(encounter?.ZoneName) ?
+                    encounter?.ZoneName :
+                    this.Zone;
+                var title = !string.IsNullOrEmpty(encounter?.Title) ?
+                    encounter?.Title :
+                    "UNKNOWN";
 
                 fileName =
-                    $"{DateTime.Now:yyyy-MM-dd_HHmmss}.{this.PlayerName}[{this.PlayerJob}].{this.Zone}.{this.takeCount}.json";
+                    $"{DateTime.Now:yyMMdd_HHmmss}_{this.PlayerName}[{this.PlayerJob}]_{zone}({title}).json";
 
                 // 無効な文字を取り除く
                 fileName = string.Concat(fileName.Where(c => !Path.GetInvalidFileNameChars().Contains(c)));

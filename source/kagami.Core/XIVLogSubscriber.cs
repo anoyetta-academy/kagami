@@ -75,17 +75,21 @@ namespace kagami
         }
 
         private static readonly int LongSleep = 3000;
+        private static readonly byte PC = 1;
 
         private Regex networkAbilityRegex;
         private Regex defeatedRegex;
-        private string previousPlayerName;
+        private string previousActorName;
 
+        /*
         private static readonly string ChangedZoneLog = "01:Changed Zone to";
         private static readonly string ChangedPrimaryPlayerLog = "02:Changed primary player";
+        */
 
-        private volatile string previousActionKey = string.Empty;
+        private volatile string previousActionID = string.Empty;
+        private DateTime previousActionTimestamp = DateTime.MinValue;
 
-        private async void StoreLog()
+        private void StoreLog()
         {
             if (this.Config == null)
             {
@@ -102,28 +106,49 @@ namespace kagami
                     return;
                 }
 
-                var player = SharlayanHelper.Instance.GetCurrentPlayer();
-                if (player == null ||
-                    string.IsNullOrEmpty(player.Name))
+                var player = FFXIVPluginHelper.Instance.CurrentPlayer;
+                var target = FFXIVPluginHelper.Instance.CurrentTarget;
+                var focus = FFXIVPluginHelper.Instance.CurrentFocusTarget;
+
+                if (string.IsNullOrEmpty(player?.Name) &&
+                    string.IsNullOrEmpty(target?.Name) &&
+                    string.IsNullOrEmpty(focus?.Name))
                 {
                     interval = LongSleep;
                     return;
                 }
 
-                if (this.previousPlayerName != player.Name)
+                var actor = player;
+                if (focus != null &&
+                    focus.type == PC)
                 {
-                    this.previousPlayerName = player.Name;
+                    actor = focus;
+                }
+                else
+                {
+                    if (target != null &&
+                        target.type == PC)
+                    {
+                        actor = target;
+                    }
+                }
+
+                if (this.previousActorName != actor.Name)
+                {
+                    this.previousActorName = actor.Name;
 
                     // 15:10078E31:Anoyetta Anon:A5:サモン:
                     // 16:10078E31:Anoyetta Anon:B1:ミアズラ:
                     this.networkAbilityRegex = new Regex(
-                        $" (15|16):[0-9a-fA-F]+:{player.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
+                        $" (15|16):[0-9a-fA-F]+:{actor.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
                     // 19:Anoyetta Anon was defeated by ガルーダ.
                     this.defeatedRegex = new Regex(
-                        $" 19:{player.Name} was defeated by",
+                        $" 19:{actor.Name} was defeated by",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+                    ActionEchoesModel.Instance.Clear();
                 }
 
                 if (this.networkAbilityRegex == null ||
@@ -133,8 +158,8 @@ namespace kagami
                     return;
                 }
 
-                ActionEchoesModel.Instance.PlayerName = player.Name;
-                ActionEchoesModel.Instance.PlayerJob = player.Job.ToString();
+                ActionEchoesModel.Instance.PlayerName = actor.Name;
+                ActionEchoesModel.Instance.PlayerJob = actor.GetJob().ToString();
 
                 while (this.LogInfoQueue.TryDequeue(out LogLineEventArgs e))
                 {
@@ -151,49 +176,43 @@ namespace kagami
 
                     try
                     {
-                        if (line.Contains(ChangedZoneLog) ||
-                            line.Contains(ChangedPrimaryPlayerLog) ||
-                            this.defeatedRegex.IsMatch(line))
-                        {
-                            await ActionEchoesModel.Instance.SaveLogAsync();
-                            ActionEchoesModel.Instance.Clear();
-                            continue;
-                        }
-
                         var match = this.networkAbilityRegex.Match(line);
                         if (!match.Success)
                         {
                             continue;
                         }
 
-                        var timestamp = line.Substring(0, 15).TrimEnd();
+                        var t = line.Substring(0, 15)
+                            .TrimEnd()
+                            .Replace("[", string.Empty)
+                            .Replace("]", string.Empty);
+                        if (!DateTime.TryParse(t, out DateTime timestamp))
+                        {
+                            timestamp = DateTime.Now;
+                        }
+
                         var actionID = match.Groups["ActionID"].ToString();
                         var actionName = match.Groups["ActionName"].ToString();
 
-                        var actionKey = $"{timestamp}-{actionID}-{actionName}";
                         if (string.Equals(
-                            this.previousActionKey,
-                            actionKey,
+                            actionID,
+                            this.previousActionID,
                             StringComparison.OrdinalIgnoreCase))
                         {
-                            continue;
+                            if ((timestamp - this.previousActionTimestamp)
+                                < TimeSpan.FromMilliseconds(200))
+                            {
+                                continue;
+                            }
                         }
 
-                        this.previousActionKey = actionKey;
+                        this.previousActionID = actionID;
+                        this.previousActionTimestamp = timestamp;
 
                         var echo = new ActionEchoModel();
-
-                        if (DateTime.TryParse(timestamp, out DateTime d))
-                        {
-                            echo.Timestamp = d;
-                        }
-                        else
-                        {
-                            echo.Timestamp = DateTime.Now;
-                        }
-
+                        echo.Timestamp = timestamp;
                         echo.Source = line;
-                        echo.Actor = player.Name;
+                        echo.Actor = actor.Name;
 
                         if (uint.TryParse(actionID, NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out uint i))
                         {

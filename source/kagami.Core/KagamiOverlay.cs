@@ -39,6 +39,7 @@ namespace kagami
         private static readonly int LongInterval = 3000;
         private volatile bool isUpdating = false;
         private long previousSeq = 0;
+        private bool previousStats = false;
 
         protected override async void Update()
         {
@@ -70,21 +71,48 @@ namespace kagami
                     this.timer.Interval = LongInterval;
                 }
 
-                if (this.previousSeq != ActionEchoesModel.Instance.Seq ||
-                    this.Config.IsDesignMode)
+                var stats = ActionEchoesModel.Instance.GetEncounterStats();
+                var isNeedsSave = false;
+
+                lock (this)
                 {
+                    if (!this.Config.IsDesignMode &&
+                        this.previousSeq == ActionEchoesModel.Instance.Seq &&
+                        this.previousStats == stats)
+                    {
+                        return;
+                    }
+
                     this.previousSeq = ActionEchoesModel.Instance.Seq;
 
-                    var json = await ActionEchoesModel.Instance.ParseJsonAsync();
+                    if (this.previousStats != stats)
+                    {
+                        this.previousStats = stats;
+                        isNeedsSave = !stats;
+                    }
+                }
 
-                    var updateScript =
-                        $"var model =\n{ json };\n\n" +
-                        "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
+                var json = await ActionEchoesModel.Instance.ParseJsonAsync();
 
+                var updateScript =
+                    $"var model =\n{ json };\n\n" +
+                    "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
+
+                this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
+                    updateScript,
+                    null,
+                    0);
+
+                if (isNeedsSave)
+                {
+                    var script = "document.dispatchEvent(new CustomEvent('onEndEncounter', null));\n";
                     this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
-                        updateScript,
+                        script,
                         null,
                         0);
+
+                    await ActionEchoesModel.Instance.SaveLogAsync();
+                    ActionEchoesModel.Instance.Clear();
                 }
             }
             catch (Exception ex)

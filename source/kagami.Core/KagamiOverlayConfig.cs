@@ -51,6 +51,22 @@ namespace kagami
             set => this.SetProperty(ref this.isDesignMode, value);
         }
 
+        private bool isEnableTargetCapture = true;
+
+        public bool IsEnableTargetCapture
+        {
+            get => this.isEnableTargetCapture;
+            set => this.SetProperty(ref this.isEnableTargetCapture, value);
+        }
+
+        private bool isEnableFocusTargetCapture = true;
+
+        public bool IsEnableFocusTargetCapture
+        {
+            get => this.isEnableFocusTargetCapture;
+            set => this.SetProperty(ref this.isEnableFocusTargetCapture, value);
+        }
+
         private int bufferSizeOfActionEcho = 30;
 
         public int BufferSizeOfActionEcho

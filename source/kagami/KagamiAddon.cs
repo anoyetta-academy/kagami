@@ -11,6 +11,7 @@ namespace kagami
     {
         static KagamiAddon()
         {
+            CosturaUtility.Initialize();
             AssemblyResolver.Initialize();
         }
 
