@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<release_notes>
+  <name>kagami</name>
+
+  <!-- 
+    #Placeholder#
+
+    BuildNo         : ビルド番号
+    Timestamp       : タイムスタンプ
+    Tag             : タグ
+    ArchiveFileName : アーカイブファイル名
+  -->
+
+  <note>
+    <version>0.1.0.3116</version>
+    <channel>Beta</channel>
+    <timestamp>2019-07-05T16:24:43.9716721+09:00</timestamp>
+    <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.1.0.3116-Beta/kagami_v0_1_0_3116_Beta.zip</uri>
+    <description>
+    * Beta1
+    </description>
+  </note>
+</release_notes>

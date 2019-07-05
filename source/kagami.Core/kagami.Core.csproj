@@ -398,7 +398,9 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>@echo off
+copy /y $(ProjectDir)..\kagami\Version.cs $(ProjectDir)&gt;nul
+
+</PreBuildEvent>
   </PropertyGroup>
 </Project>
