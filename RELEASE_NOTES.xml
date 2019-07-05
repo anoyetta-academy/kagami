@@ -18,6 +18,14 @@
     <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.1.0.3116-Beta/kagami_v0_1_0_3116_Beta.zip</uri>
     <description>
     * Beta1
+    * 範囲スキルが重複してしまう場合がある不具合を修正した
+    * スキルが抜けてしまう場合がある不具合を修正した
+    * アクションのソート順をタイムスタンプ順から発生順に変更した
+    * isActiveフラグが機能していなかった不具合を修正した
+    * ログファイルのファイル名の書式を変更した
+    * ログファイルの出力タイミングを変更した
+    * encount の終了時に onEndEncounter イベントを発生させるようにした
+    * PCをターゲットまたはフォーカスターゲットしたときそのPCのアクションをキャプチャーするようにした
     </description>
   </note>
 </release_notes>
