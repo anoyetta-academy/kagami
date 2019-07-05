@@ -15,9 +15,7 @@
    ```
    OverlayPlugin
     ├ addons
-    │  ├ bin (new)
-    │  ├ kagami.dll (new)
-    │  └ kagami.Core.dll (new)
+    │  └ kagami.dll (new)
     └ resources
        └ kagami (new)
    ```
