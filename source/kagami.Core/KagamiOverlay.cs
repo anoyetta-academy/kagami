@@ -70,22 +70,27 @@ namespace kagami
                     this.timer.Interval = LongInterval;
                 }
 
-                if (this.previousSeq != ActionEchoesModel.Instance.Seq ||
-                    this.Config.IsDesignMode)
+                lock (this)
                 {
+                    if (!this.Config.IsDesignMode &&
+                        this.previousSeq == ActionEchoesModel.Instance.Seq)
+                    {
+                        return;
+                    }
+
                     this.previousSeq = ActionEchoesModel.Instance.Seq;
-
-                    var json = await ActionEchoesModel.Instance.ParseJsonAsync();
-
-                    var updateScript =
-                        $"var model =\n{ json };\n\n" +
-                        "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
-
-                    this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
-                        updateScript,
-                        null,
-                        0);
                 }
+
+                var json = await ActionEchoesModel.Instance.ParseJsonAsync();
+
+                var updateScript =
+                    $"var model =\n{ json };\n\n" +
+                    "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
+
+                this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
+                    updateScript,
+                    null,
+                    0);
             }
             catch (Exception ex)
             {
