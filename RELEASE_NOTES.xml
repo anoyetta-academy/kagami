@@ -18,6 +18,7 @@
     <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.1.0.3116-Beta/kagami_v0_1_0_3116_Beta.zip</uri>
     <description>
     * Beta1
+    * 配布物の構成を変更した。Assemblyを統合し kagami.dll のみにした
     * 範囲スキルが重複してしまう場合がある不具合を修正した
     * スキルが抜けてしまう場合がある不具合を修正した
     * アクションのソート順をタイムスタンプ順から発生順に変更した
