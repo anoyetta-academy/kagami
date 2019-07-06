@@ -2,9 +2,11 @@
 
 「カガミ」はスキル回しを見やすく表示するためのツールです。OverlayPlugin の Add-on として動作します。  
 
-* 配信のときに視聴者がスキル回しを見せることが出来る
-* 自分で録画を確認するときにスキル回しをチェックしやすくなる
+* 配信のときに視聴者にスキル回しを見せることが出来る
+* 自分で録画してスキル回しをチェックすることが出来る
 * 木人でのスキル回し動画を作成するときにスキル回しを見せやすくなる
+
+![preview](https://github.com/ramram1048/kagamireact/raw/master/mdimages/preview.gif)
 
 ### **[DOWNLOAD](<https://github.com/anoyetta-academy/kagami/releases>)**
 
@@ -34,3 +36,5 @@ https://github.com/ramram1048/kagamireact
 * スキンURL  
 ```https://ramram1048.github.io/kagamireact/```
 
+## 制限事項
+* ゴーストモードは未実装です
