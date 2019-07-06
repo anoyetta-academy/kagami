@@ -112,9 +112,15 @@ namespace kagami.Helpers
 
         private void DoRefreshCombatant()
         {
+            if (!this.Config.IsVisible)
+            {
+                Thread.Sleep(5000);
+                return;
+            }
+
             this.CurrentPlayer = this.DataRepository?.GetCombatantList().FirstOrDefault();
 
-            if (Config.IsEnableTargetCapture)
+            if (this.Config.IsEnableTargetCapture)
             {
                 this.CurrentTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.Target);
             }
@@ -123,7 +129,7 @@ namespace kagami.Helpers
                 this.CurrentTarget = null;
             }
 
-            if (Config.IsEnableFocusTargetCapture)
+            if (this.Config.IsEnableFocusTargetCapture)
             {
                 this.CurrentFocusTarget = this.DataRepository?.GetCombatantByOverlayType(OverlayType.FocusTarget);
             }
