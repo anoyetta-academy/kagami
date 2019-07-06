@@ -40,4 +40,21 @@
     * ターゲット, フォーカスターゲットのキャプチャーをOFFに出来ない不具合を修正した
     </description>
   </note>
+
+  <note>
+    <version>0.2.0.3216</version>
+    <channel>Beta</channel>
+    <timestamp>2019-07-06T16:10:37.2444169+09:00</timestamp>
+    <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.2.0.3216-Beta/kagami_v0_2_0_3216_Beta.zip</uri>
+    <description>
+    * Beta2
+    * 非表示のときもバックグランドスレッドが走っていた不具合を修正した
+    * データモデルに以下の項目を追加した
+      -> minSkillCycle 最小スキルサイクル(second)
+      -> avgSkillCycle 平均スキルサイクル(second)
+      -> cycle スキルサイクル
+         直前のウェポンスキルまたはスペルからの経過秒数
+      -> actualTimestamp アクションを検知した実際のタイムスタンプ
+    </description>
+  </note>
 </release_notes>

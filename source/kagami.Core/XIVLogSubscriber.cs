@@ -31,7 +31,8 @@ namespace kagami
 
         private void OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
-            if (!this.Config.IsVisible)
+            if (this.Config == null ||
+                !this.Config.IsVisible)
             {
                 return;
             }
