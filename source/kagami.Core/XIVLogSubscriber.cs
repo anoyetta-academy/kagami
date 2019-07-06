@@ -31,6 +31,11 @@ namespace kagami
 
         private void OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
+            if (!this.Config.IsVisible)
+            {
+                return;
+            }
+
             if (logInfo.logLine.Length <= 18)
             {
                 return;
@@ -91,8 +96,14 @@ namespace kagami
 
         private void StoreLog()
         {
-            if (this.Config == null)
+            if (this.Config == null ||
+                !this.Config.IsVisible)
             {
+                if (!this.LogInfoQueue.IsEmpty)
+                {
+                    while (this.LogInfoQueue.TryDequeue(out LogLineEventArgs e)) ;
+                }
+
                 Thread.Sleep(LongSleep);
                 return;
             }
@@ -211,6 +222,7 @@ namespace kagami
 
                         var echo = new ActionEchoModel();
                         echo.Timestamp = timestamp;
+                        echo.ActualTimestamp = DateTime.Now;
                         echo.Source = line;
                         echo.Actor = actor.Name;
 
