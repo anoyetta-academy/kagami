@@ -53,6 +53,33 @@ namespace kagami.Models
         [JsonProperty("timestamp")]
         public string TimestampText => this.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+        private DateTime actualTimestamp;
+
+        [JsonIgnore]
+        public DateTime ActualTimestamp
+        {
+            get => this.actualTimestamp;
+            set
+            {
+                if (this.SetProperty(ref this.actualTimestamp, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.ActualTimestampText));
+                }
+            }
+        }
+
+        [JsonProperty("actualTimestamp")]
+        public string ActualTimestampText => this.ActualTimestamp.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+        private double cycle;
+
+        [JsonProperty("cycle")]
+        public double Cycle
+        {
+            get => this.cycle;
+            set => this.SetProperty(ref this.cycle, value);
+        }
+
         private string actor;
 
         [JsonProperty("actor")]

@@ -50,6 +50,12 @@ namespace kagami.Models
         [JsonProperty("time")]
         public string TimeText => this.Time.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+        [JsonProperty("minSkillCycle")]
+        public double MinimumSkillCycle { get; set; } = 0;
+
+        [JsonProperty("avgSkillCycle")]
+        public double AverageSkillCycle { get; set; } = 0;
+
         [JsonProperty("isActive")]
         public bool IsActive { get; set; }
 
@@ -96,6 +102,8 @@ namespace kagami.Models
             {
                 this.echoes.Clear();
                 this.Seq = 0;
+                this.MinimumSkillCycle = 0;
+                this.AverageSkillCycle = 0;
             }
         }
 
@@ -103,8 +111,34 @@ namespace kagami.Models
         {
             lock (this.echoes)
             {
+                var lastSkill = this.echoes.LastOrDefault(x =>
+                    x.Category == ActionCategory.Weaponskill ||
+                    x.Category == ActionCategory.Spell);
+
+                if (lastSkill != null)
+                {
+                    model.Cycle = Math.Round(
+                        (model.ActualTimestamp - lastSkill.ActualTimestamp).TotalSeconds,
+                        3);
+                }
+
                 this.echoes.Add(model);
                 this.Seq++;
+
+                var statistics =
+                    from x in this.echoes
+                    where
+                    (x.Category == ActionCategory.Weaponskill || x.Category == ActionCategory.Spell) &&
+                    x.Cycle >= 2.0d &&
+                    x.Cycle <= 3.0d
+                    select
+                    x;
+
+                if (statistics.Any())
+                {
+                    this.AverageSkillCycle = Math.Round(statistics.Average(x => x.Cycle), 3);
+                    this.MinimumSkillCycle = statistics.Min(x => x.Cycle);
+                }
             }
         }
 
