@@ -6,6 +6,8 @@
 * 自分で録画してスキル回しをチェックすることが出来る
 * 木人でのスキル回し動画を作成するときにスキル回しを見せやすくなる
 
+![preview](https://github.com/ramram1048/kagamireact/raw/master/mdimages/preview.gif)
+
 ### **[DOWNLOAD](<https://github.com/anoyetta-academy/kagami/releases>)**
 
 ## インストール
