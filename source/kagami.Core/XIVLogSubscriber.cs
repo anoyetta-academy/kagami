@@ -83,7 +83,11 @@ namespace kagami
         private static readonly int LongSleep = 3000;
         private static readonly byte PC = 1;
 
+        private static readonly string MedicatedDummyActionID = "FFFF";
+        private static readonly int MedicatedDummyActionIconID = 061165;
+
         private Regex networkAbilityRegex;
+        private Regex medicatedRegex;
         private Regex defeatedRegex;
         private string previousActorName;
 
@@ -155,6 +159,11 @@ namespace kagami
                         $" (15|16):[0-9a-fA-F]+:{actor.Name}:(?<ActionID>[0-9a-fA-F]+):(?<ActionName>.+?):[0-9a-fA-F]",
                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+                    // 1A:100EFDBA:Anoyetta Anon gains the effect of 強化薬
+                    this.medicatedRegex = new Regex(
+                        $" 1A:[0-9a-fA-F]+:{actor.Name} gains the effect of (?<ActionName>強化薬|Medicated|Stärkung|Médicamenté)",
+                        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
                     // 19:Anoyetta Anon was defeated by ガルーダ.
                     this.defeatedRegex = new Regex(
                         $" 19:{actor.Name} was defeated by",
@@ -164,6 +173,7 @@ namespace kagami
                 }
 
                 if (this.networkAbilityRegex == null ||
+                    this.medicatedRegex == null ||
                     this.defeatedRegex == null)
                 {
                     interval = LongSleep;
@@ -181,17 +191,26 @@ namespace kagami
                         !line.Contains("] 02:") &&
                         !line.Contains("] 15:") &&
                         !line.Contains("] 16:") &&
-                        !line.Contains("] 19:"))
+                        !line.Contains("] 19:") &&
+                        !line.Contains("] 1A:"))
                     {
                         continue;
                     }
 
                     try
                     {
+                        var isMedicated = false;
+
                         var match = this.networkAbilityRegex.Match(line);
                         if (!match.Success)
                         {
-                            continue;
+                            match = this.medicatedRegex.Match(line);
+                            if (!match.Success)
+                            {
+                                continue;
+                            }
+
+                            isMedicated = true;
                         }
 
                         var t = line.Substring(0, 15)
@@ -203,7 +222,9 @@ namespace kagami
                             timestamp = DateTime.Now;
                         }
 
-                        var actionID = match.Groups["ActionID"].ToString();
+                        var actionID = !isMedicated ?
+                            match.Groups["ActionID"].ToString() :
+                            MedicatedDummyActionID;
                         var actionName = match.Groups["ActionName"].ToString();
 
                         if (string.Equals(
@@ -234,12 +255,20 @@ namespace kagami
 
                         echo.Name = actionName;
 
-                        var info = SharlayanHelper.Instance.GetActionInfo(echo.ID);
-                        if (info != null)
+                        if (isMedicated)
                         {
-                            echo.IconCode = info.Icon;
-                            echo.Category = (ActionCategory)Enum.ToObject(typeof(ActionCategory), info.ActionCategory);
-                            echo.RecastTime = (float)info.RecastTime;
+                            echo.Category = ActionCategory.Item;
+                            echo.IconCode = MedicatedDummyActionIconID;
+                        }
+                        else
+                        {
+                            var info = SharlayanHelper.Instance.GetActionInfo(echo.ID);
+                            if (info != null)
+                            {
+                                echo.IconCode = info.Icon;
+                                echo.Category = (ActionCategory)Enum.ToObject(typeof(ActionCategory), info.ActionCategory);
+                                echo.RecastTime = (float)info.RecastTime;
+                            }
                         }
 
                         ActionEchoesModel.Instance.Time = echo.Timestamp;
