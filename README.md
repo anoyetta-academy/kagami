@@ -35,6 +35,8 @@
 https://github.com/ramram1048/kagamireact  
 * スキンURL  
 ```https://ramram1048.github.io/kagamireact/```
+* 軽量版スキンURL  
+```https://ramram1048.github.io/kagami-light/```
 
 ## 制限事項
 * ゴーストモードは未実装です
