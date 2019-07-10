@@ -57,4 +57,18 @@
       -> actualTimestamp アクションを検知した実際のタイムスタンプ
     </description>
   </note>
+
+  <note>
+    <version>0.3.0.3609</version>
+    <channel>Beta</channel>
+    <timestamp>2019-07-10T09:37:30.9272359+09:00</timestamp>
+    <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.3.0.3609-Beta/kagami_v0_3_0_3609_Beta.zip</uri>
+    <description>
+    * Beta3
+    * 伐採師の略称を修正した BOT→BTN
+    * 強化薬を通知するようにした
+      -> category:5(Item) として通知されます
+      -> アイコンはアクションの中からマッチしそうなものを仮に設定しました
+    </description>
+  </note>
 </release_notes>

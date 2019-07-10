@@ -167,7 +167,7 @@ namespace kagami.Helpers
         ALC = 14,
         CUL = 15,
         MIN = 16,
-        BOT = 17,
+        BTN = 17,
         FSH = 18,
         PLD = 19,
         MNK = 20,
