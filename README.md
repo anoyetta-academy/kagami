@@ -42,7 +42,7 @@ https://github.com/ramram1048/kagamireact
 ## FAQ
 * オーバーレイがOBSの配信に映らない  
 Chrome のハードウェアアクセラレータを切りましょう。  
-OverlayPlugin は Chrome を使用して描画しているため一部の設定は Chrome 本体の設定の影響を受けます。 
+OverlayPlugin は Chrome を使用して描画しているため一部の設定は Chrome 本体の設定の影響を受けます。  
 下記の手順を実行してください。  
     1. Chrome のメニューを開く
     2. [設定] をクリックする
