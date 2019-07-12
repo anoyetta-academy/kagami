@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<effects>
+  <!-- TANK -->
+  <job id="PLD">
+    <effect name="ファイト・オア・フライト" type="self" />
+    <effect name="レクイエスカット" type="self" />
+    <effect name="忠義の剣" type="self" />
+  </job>
+
+  <job id="WAR">
+    <effect name="シュトルムブレハ" type="self" />
+    <effect name="原初の解放" type="self" />
+  </job>
+
+  <job id="DRK">
+    <effect name="ブラッドウェポン" type="self" />
+    <effect name="ブラッドデリリアム" type="self" />
+  </job>
+
+  <job id="GNB">
+    <effect name="ノー・マーシー" type="self" />
+  </job>
+
+  <!-- HEALER -->
+  <job id="WHM">
+    <!-- NO DATA -->
+  </job>
+
+  <job id="SCH">
+    <effect name="連環計" type="enemy-debuff" />
+  </job>
+
+  <job id="AST">
+    <!-- NO DATA -->
+  </job>
+
+  <!-- PHYSICAL MELEE DPS -->
+  <job id="MNK">
+    <!-- NO DATA -->
+  </job>
+
+  <job id="DRG">
+    <effect name="バトルリタニー" type="party" />
+    <effect name="竜の左眼" type="party" />
+    <effect name="ランスチャージ" type="self" />
+    <effect name="ディセムボウル" type="self" />
+    <effect name="竜の右眼" type="self" />
+    <effect name="ライフサージ" type="self" />
+  </job>
+
+  <job id="NIN">
+    <effect name="騙し討ち" type="enemy-debuff" />
+    <effect name="天地人" type="self" />
+    <effect name="活殺自在" type="self" />
+    <effect name="分身の術" type="self" />
+  </job>
+
+  <job id="SAM">
+    <!-- NO DATA -->
+  </job>
+
+  <!-- PHYSICAL RANGE DPS -->
+  <job id="BRD">
+    <effect name="軍神の加護" type="self" />
+    <effect name="猛者の撃" type="self" />
+    <effect name="バトルボイス" type="party" />
+  </job>
+
+  <job id="MCH">
+    <effect name="ワイルドファイア" type="self" />
+    <effect name="整備" type="self" />
+  </job>
+
+  <job id="DNC">
+    <effect name="攻めのタンゴ" type="party" />
+    <effect name="スタンダードフィニッシュ" type="party" />
+    <effect name="テクニカルフィニッシュ" type="party" />
+  </job>
+
+  <!-- MAGIC RANGE DPS -->
+  <job id="BLM">
+    <!-- NO DATA -->
+  </job>
+
+  <job id="SMN">
+    <!-- NO DATA -->
+  </job>
+
+  <job id="RDM">
+    <!-- NO DATA -->
+  </job>
+</effects>

@@ -18,5 +18,10 @@
         Glamour,
         ItemManipulaction,
         AdrenalineRush,
+
+        GainsEffectSelf = 128,
+        LosesEffectSelf,
+        GainsEffectParty,
+        LosesEffectParty,
     }
 }
