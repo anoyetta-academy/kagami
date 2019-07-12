@@ -93,6 +93,7 @@
     <Compile Include="Models\ActionCategory.cs" />
     <Compile Include="Models\ActionEchoModel.cs" />
     <Compile Include="Models\ActionEchoesModel.cs" />
+    <Compile Include="Models\EffectMasterModel.cs" />
     <Compile Include="Models\NetworkAbilityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -384,6 +385,7 @@
     <Content Include="resources\kagami\job_icons\WVR.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="resources\kagami\data\effects.xml.master" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\KagamiConfigView.xaml">
