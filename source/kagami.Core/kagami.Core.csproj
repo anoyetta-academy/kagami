@@ -397,7 +397,7 @@
     <Content Include="resources\kagami\job_icons\WVR.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\kagami\data\effects.master.xml" />
+    <None Include="resources\kagami\data\effects.master.json" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\KagamiConfigView.xaml">
