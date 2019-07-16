@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using kagami.Helpers;
+using kagami.XIVAPI;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
@@ -70,14 +71,23 @@ namespace kagami
         {
             Task.Run(async () =>
             {
-                await Task.Delay(500);
+                try
+                {
+                    await Task.Delay(500);
 
-                FFXIVPluginHelper.Instance.Start();
-                SharlayanHelper.Instance.Start();
+                    FFXIVPluginHelper.Instance.Start();
+                    SharlayanHelper.Instance.Start();
 
-                await Task.Delay(100);
+                    await Task.Delay(100);
 
-                XIVLogSubscriber.Instance.Start();
+                    XIVLogSubscriber.Instance.Start();
+
+                    await APIHelper.Instance.LoadAsync();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"addon initialize error. {ex.ToString()}");
+                }
             });
         }
     }

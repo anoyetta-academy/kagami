@@ -1,0 +1,94 @@
+﻿{
+  "effects" : [
+    // PLD
+    { "order" : "1", "job" : "PLD", "name" : "ファイト・オア・フライト", "target" : "Self" },
+    { "order" : "2", "job" : "PLD", "name" : "レクイエスカット", "target" : "Self" },
+    { "order" : "3", "job" : "PLD", "name" : "忠義の剣", "target" : "Self" },
+
+    // WAR
+    { "order" : "11", "job" : "WAR", "name" : "シュトルムブレハ", "target" : "Self" },
+    { "order" : "12", "job" : "WAR", "name" : "原初の解放", "target" : "Self" },
+
+    // DRK
+    { "order" : "21", "job" : "DRK", "name" : "ブラッドウェポン", "target" : "Self" },
+    { "order" : "22", "job" : "DRK", "name" : "ブラッドデリリアム", "target" : "Self" },
+
+    // GNB
+    { "order" : "31", "job" : "GNB", "name" : "ノー・マーシー", "target" : "Self" },
+
+    // WHM
+    { "order" : "41", "job" : "WHM", "name" : "神速魔", "target" : "Self" },
+    { "order" : "42", "job" : "WHM", "name" : "シンエアー", "target" : "Self" },
+
+    // SCH
+    { "order" : "51", "job" : "SCH", "name" : "連環計", "target" : "Self" },
+
+    // AST
+    { "order" : "61", "job" : "AST", "name" : "ライトスピード", "target" : "Self" },
+    { "order" : "62", "job" : "AST", "name" : "ハルオーネの槍", "target" : "Party" },
+    { "order" : "63", "job" : "AST", "name" : "アーゼマの均衡", "target" : "Party" },
+    { "order" : "64", "job" : "AST", "name" : "オシュオンの矢", "target" : "Party" },
+    { "order" : "65", "job" : "AST", "name" : "世界樹の幹", "target" : "Party" },
+    { "order" : "66", "job" : "AST", "name" : "ビエルゴの塔", "target" : "Party" },
+    { "order" : "67", "job" : "AST", "name" : "サリャクの水瓶", "target" : "Party" },
+    { "order" : "68", "job" : "AST", "name" : "クラウンロード", "target" : "Party" },
+    { "order" : "69", "job" : "AST", "name" : "クラウンレディ", "target" : "Party" },
+    { "order" : "70", "job" : "AST", "name" : "ディヴィネーション", "target" : "Party" },
+
+    // MNK
+    { "order" : "81", "job" : "MNK", "name" : "双掌打", "target" : "Self" },
+    { "order" : "82", "job" : "MNK", "name" : "踏鳴", "target" : "Self" },
+    { "order" : "83", "job" : "MNK", "name" : "金剛の極意", "target" : "Self" },
+    { "order" : "84", "job" : "MNK", "name" : "紅蓮の極意", "target" : "Self" },
+    { "order" : "85", "job" : "MNK", "name" : "桃園結儀：闘気", "target" : "Self" },
+    { "order" : "86", "job" : "MNK", "name" : "桃園結儀：攻撃", "target" : "Party" },
+
+    // DRG
+    { "order" : "91", "job" : "DRG", "name" : "ランスチャージ", "target" : "Self" },
+    { "order" : "92", "job" : "DRG", "name" : "ディセムボウル", "target" : "Self" },
+    { "order" : "93", "job" : "DRG", "name" : "竜の右眼", "target" : "Self" },
+    { "order" : "94", "job" : "DRG", "name" : "ライフサージ", "target" : "Self" },
+    { "order" : "95", "job" : "DRG", "name" : "バトルリタニー", "target" : "Party" },
+    { "order" : "96", "job" : "DRG", "name" : "竜の左眼", "target" : "Party" },
+
+    // NIN
+    { "order" : "101", "job" : "NIN", "name" : "天地人", "target" : "Self" },
+    { "order" : "102", "job" : "NIN", "name" : "活殺自在", "target" : "Self" },
+    { "order" : "103", "job" : "NIN", "name" : "分身の術", "target" : "Self" },
+    { "order" : "104", "job" : "NIN", "name" : "騙し討ち", "target" : "Enemy" },
+
+    // SAM
+    { "order" : "111", "job" : "SAM", "name" : "陣風", "target" : "Self" },
+    { "order" : "112", "job" : "SAM", "name" : "士風", "target" : "Self" },
+    { "order" : "113", "job" : "SAM", "name" : "心眼", "target" : "Self" },
+    { "order" : "114", "job" : "SAM", "name" : "開眼", "target" : "Self" },
+
+    // BRD
+    { "order" : "121", "job" : "DRG", "name" : "軍神の加護", "target" : "Self" },
+    { "order" : "122", "job" : "DRG", "name" : "猛者の撃", "target" : "Self" },
+    { "order" : "123", "job" : "DRG", "name" : "バトルボイス", "target" : "Party" },
+
+    // MCH
+    { "order" : "131", "job" : "MCH", "name" : "ワイルドファイア", "target" : "Self" },
+    { "order" : "132", "job" : "MCH", "name" : "整備", "target" : "Self" },
+
+    // DNC
+    { "order" : "141", "job" : "DNC", "name" : "攻めのタンゴ", "target" : "Party" },
+    { "order" : "142", "job" : "DNC", "name" : "スタンダードフィニッシュ", "target" : "Party" },
+    { "order" : "143", "job" : "DNC", "name" : "テクニカルフィニッシュ", "target" : "Party" },
+
+    // BLM
+    { "order" : "151", "job" : "BLM", "name" : "エノキアン", "target" : "Self" },
+    { "order" : "152", "job" : "BLM", "name" : "三連魔", "target" : "Self" },
+    { "order" : "153", "job" : "BLM", "name" : "アストラルファイア", "target" : "Self" },
+    { "order" : "154", "job" : "BLM", "name" : "アンブラルブリザード", "target" : "Self" },
+
+    // SMN
+    { "order" : "161", "job" : "SMN", "name" : "エギの加護", "target" : "Self" },
+    { "order" : "162", "job" : "SMN", "name" : "ルイネーション", "target" : "Enemy" },
+
+    // RDM
+    { "order" : "171", "job" : "RDM", "name" : "エンボルデン", "target" : "Party" },
+    { "order" : "172", "job" : "RDM", "name" : "アクセラレーション", "target" : "Self" },
+  ]
+}

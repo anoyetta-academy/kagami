@@ -7,6 +7,7 @@ using Advanced_Combat_Tracker;
 using kagami.Helpers;
 using kagami.Helpers.Common;
 using kagami.Models;
+using kagami.XIVAPI;
 
 namespace kagami
 {
@@ -262,12 +263,13 @@ namespace kagami
                         }
                         else
                         {
-                            var info = SharlayanHelper.Instance.GetActionInfo(echo.ID);
+                            var info = APIHelper.Instance.GetActionInfo((int)echo.ID);
                             if (info != null)
                             {
-                                echo.IconCode = info.Icon;
+                                echo.IconCode = info.IconCode;
+                                echo.IconUri = info.IconUri;
                                 echo.Category = (ActionCategory)Enum.ToObject(typeof(ActionCategory), info.ActionCategory);
-                                echo.RecastTime = (float)info.RecastTime;
+                                echo.RecastTime = 0;
                             }
                         }
 

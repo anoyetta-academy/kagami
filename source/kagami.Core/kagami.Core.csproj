@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Common\ThreadWorker.cs" />
     <Compile Include="Helpers\FFXIVPluginHelper.cs" />
+    <Compile Include="Helpers\Job.cs" />
     <Compile Include="Helpers\SharlayanHelper.cs" />
     <Compile Include="KagamiOverlay.cs" />
     <Compile Include="KagamiOverlayConfig.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Models\ActionCategory.cs" />
     <Compile Include="Models\ActionEchoModel.cs" />
     <Compile Include="Models\ActionEchoesModel.cs" />
+    <Compile Include="Models\EffectModel.cs" />
     <Compile Include="Models\EffectMasterModel.cs" />
     <Compile Include="Models\NetworkAbilityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -113,6 +115,10 @@
     <Compile Include="Views\KagamiConfigView.xaml.cs">
       <DependentUpon>KagamiConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XIVAPI\Action.cs" />
+    <Compile Include="XIVAPI\APIHelper.cs" />
+    <Compile Include="XIVAPI\Icon.cs" />
+    <Compile Include="XIVAPI\Status.cs" />
     <Compile Include="XIVLogSubscriber.cs" />
     <EmbeddedResource Include="KagamiOverlayConfigPanel.resx">
       <DependentUpon>KagamiOverlayConfigPanel.cs</DependentUpon>
@@ -133,6 +139,12 @@
     </PackageReference>
     <PackageReference Include="Extended.Wpf.Toolkit">
       <Version>3.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="Flurl">
+      <Version>2.8.2</Version>
+    </PackageReference>
+    <PackageReference Include="Flurl.Http">
+      <Version>2.4.2</Version>
     </PackageReference>
     <PackageReference Include="MahApps.Metro.IconPacks">
       <Version>2.3.0</Version>
@@ -385,7 +397,7 @@
     <Content Include="resources\kagami\job_icons\WVR.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="resources\kagami\data\effects.xml.master" />
+    <Content Include="resources\kagami\data\effects.master.xml" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\KagamiConfigView.xaml">
