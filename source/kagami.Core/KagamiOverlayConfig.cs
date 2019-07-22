@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using kagami.Models;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
@@ -108,6 +110,18 @@ namespace kagami
         {
             get => this.ghostLogFile;
             set => this.SetProperty(ref this.ghostLogFile, value);
+        }
+
+        private ObservableCollection<EffectModel> effects = new ObservableCollection<EffectModel>();
+
+        public ObservableCollection<EffectModel> Effects
+        {
+            get => this.effects;
+            set
+            {
+                this.effects.Clear();
+                this.effects.AddRange(value);
+            }
         }
 
         #region INotifyPropertyChanged
