@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using kagami.Helpers;
@@ -69,6 +70,11 @@ namespace kagami
 
         private void Initialize()
         {
+            ServicePointManager.DefaultConnectionLimit = 32;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+
             Task.Run(async () =>
             {
                 try
