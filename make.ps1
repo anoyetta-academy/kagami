@@ -32,6 +32,9 @@ $depolyDirectory = ".\source\deploy"
 
 # tools
 $msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe"
+if (Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\MSBuild\Current\Bin\MSBuild.exe") {
+    $msbuild = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\MSBuild\Current\Bin\MSBuild.exe"
+}
 
 # バージョンを取得する
 ## ビルド番号を決定する
@@ -41,7 +44,7 @@ $buildNo = GetBuildNo($timestamp)
 ## リリースノートを取得する
 if ($isDebug) {
     if (Test-Path .\RELEASE_NOTES.bak) {
-        Copy-Item -Force .\RELEASE_NOTES.bak .\RELEASE_NOTES.xml 
+        Copy-Item -Force .\RELEASE_NOTES.bak .\RELEASE_NOTES.xml
     }
 }
 $releaseNotesXML = [xml] (Get-Content .\RELEASE_NOTES.xml -Encoding utf8)
@@ -95,32 +98,11 @@ $target = Get-Item .\source\*.sln
 & $msbuild $target /nologo /v:minimal /t:Clean /p:Configuration=Release
 Start-Sleep -m 100
 
-'-> Build Client'
-$target = Get-Item $targetClientDirectory\*.csproj
-& $msbuild $target /nologo /v:minimal /t:Build /p:Configuration=Release | Write-Output
-Start-Sleep -m 100
-
 # Successed? build
 foreach ($d in $targetDirectories) {
     $out = Join-Path $d "bin\Release"
     if (!(Test-Path $out)) {
         EndMake
-    }
-}
-
-foreach ($d in $targetDirectories) {
-    # pdb を削除する
-    # Remove-Item -Force (Join-Path $d "bin\Release\*.pdb")
-
-    # app.config を削除する
-    $targets = @(
-        (Join-Path $d "bin\Release\RINGS.exe.config"), 
-        (Join-Path $d "bin\Release\aframe.Updater.exe.config"))
-
-    foreach ($t in $targets) {
-        if (Test-Path $t) {
-            Remove-Item -Force $t
-        }
     }
 }
 

@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>kagami</title>
+
+  <style>
+    * {
+      font-family: Ricty, Consolas, monospace;
+      font-size: 16px;
+    }
+
+    html {
+      margin: 0;
+    }
+
+    body {
+      margin: 8px;
+    }
+
+    html {
+      height: 100%;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .resizeHandle {
+      background-image: url(handle.png);
+      background-position: bottom right;
+      background-repeat: no-repeat;
+      box-sizing: border-box;
+    }
+
+    #content,
+    #content * {
+      color: #eaf4fc;
+      text-shadow: -1px 0 3px #0f2350, 0 1px 3px #0f2350, 1px 0 3px #0f2350, 0 -1px 3px #0f2350;
+      font-weight: 300;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("onActionUpdated", function (e) {
+      update(e.detail);
+    });
+
+    // update
+    // update content to show.
+    function update(model) {
+      var content = document.getElementById('content');
+
+      // not active? (not in combat)
+      if (!model.isActive) {
+        content.innerText = "INACTIVE"
+        return;
+      }
+
+      // show data model for debug
+      var text = "";
+      text = JSON.stringify(model, null, 2);
+      content.innerHTML = "<pre>\n" + text + "</pre>\n";
+    }
+
+    document.addEventListener("onOverlayStateUpdate", function (e) {
+      if (!e.detail.isLocked) {
+        displayResizeHandle();
+      } else {
+        hideResizeHandle();
+      }
+    });
+
+    function displayResizeHandle() {
+      document.documentElement.classList.add("resizeHandle");
+    }
+
+    function hideResizeHandle() {
+      document.documentElement.classList.remove("resizeHandle");
+    }
+  </script>
+</head>
+
+<body id="kagami">
+  <div id="content">
+    NO DATA
+  </div>
+</body>
+</html>
+
+<!--
+Sample Data Model
+
+var model =
+{
+  "player": "Anoyetta Anon",
+  "job": "SCH",
+  "encDPS": 3567.0,
+  "duration": "00:10:00",
+  "zone": "Unknown Zone",
+  "time": "2019-05-10 10:52:52.892",
+  "isActive": true,
+  "actions": [
+    {
+      "seq": 16,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:50.392",
+      "actor": "Anoyetta Anon",
+      "id": 7435,
+      "name": "魔炎法",
+      "icon": "007435.png",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 15,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:47.892",
+      "actor": "Anoyetta Anon",
+      "id": 9618,
+      "name": "エナジードレイン",
+      "icon": "009618.png",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 14,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:47.867",
+      "actor": "Anoyetta Anon",
+      "id": 177,
+      "name": "ミアズラ",
+      "icon": "000177.png",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 13,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:45.392",
+      "actor": "Anoyetta Anon",
+      "id": 7436,
+      "name": "連環計",
+      "icon": "007436.png",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 12,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:45.367",
+      "actor": "Anoyetta Anon",
+      "id": 179,
+      "name": "シャドウフレア",
+      "icon": "000179.png",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 11,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:42.892",
+      "actor": "Anoyetta Anon",
+      "id": 9618,
+      "name": "エナジードレイン",
+      "icon": "009618.png",
+      "category": 4,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 10,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:42.867",
+      "actor": "Anoyetta Anon",
+      "id": 178,
+      "name": "バイオラ",
+      "icon": "000178.png",
+      "category": 2,
+      "recastTime": 2.5
+    },
+    {
+      "seq": 9,
+      "source": null,
+      "timestamp": "2019-05-10 10:52:40.392",
+      "actor": "Anoyetta Anon",
+      "id": 168,
+      "name": "ミアズマ",
+      "icon": "000168.png",
+      "category": 2,
+      "recastTime": 2.5
+    }
+  ]
+};
+
+document.dispatchEvent(new CustomEvent('onOverlayDataUpdate', { detail: model }));
+-->

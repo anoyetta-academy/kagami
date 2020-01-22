@@ -17,6 +17,14 @@ namespace kagami.ViewModels
 {
     public class KagamiConfigViewModel : BindableBase
     {
+        private KagamiOverlay overlay;
+
+        public KagamiOverlay Overlay
+        {
+            get => this.overlay;
+            set => this.SetProperty(ref this.overlay, value);
+        }
+
         private KagamiOverlayConfig config;
 
         public KagamiOverlayConfig Config
@@ -173,8 +181,8 @@ namespace kagami.ViewModels
 
         private void ExecuteReloadOverlayCommand()
         {
-            KagamiAddonCore.Current.Overlay.Navigate(this.config.Url);
-            (KagamiAddonCore.Current.Overlay as KagamiOverlay)?.ClearJsonCache();
+            this.Overlay.Navigate(this.config.Url);
+            this.Overlay.ClearJsonCache();
             SystemSounds.Asterisk.Play();
         }
 
@@ -185,7 +193,7 @@ namespace kagami.ViewModels
 
         private void ExecuteOpenDeveloperToolCommand()
         {
-            (KagamiAddonCore.Current.Overlay as KagamiOverlay).Overlay.Renderer.showDevTools();
+            this.Overlay.Overlay.Renderer.showDevTools();
         }
 
         #endregion Utility commands

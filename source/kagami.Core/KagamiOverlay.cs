@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using kagami.Helpers;
 using kagami.Models;
 using RainbowMage.OverlayPlugin;
@@ -8,21 +10,21 @@ namespace kagami
 {
     public class KagamiOverlay : OverlayBase<KagamiOverlayConfig>
     {
-        private KagamiOverlayConfig config;
-
-        public KagamiOverlay(KagamiOverlayConfig config) : base(config, config.Name)
+        public KagamiOverlay(KagamiOverlayConfig config, string name) : base(config, name)
         {
-            this.config = config;
             Logger.LogCallback += this.Log;
-            this.config.PropertyChanged += this.Config_PropertyChanged;
+            this.Config.PropertyChanged += this.Config_PropertyChanged;
 
-            this.timer.Interval = this.config.PollingInterval;
+            this.timer.Interval = this.Config.PollingInterval;
         }
+
+        public override Control CreateConfigControl()
+            => new KagamiOverlayConfigPanel(this);
 
         public override void Dispose()
         {
             Logger.LogCallback -= this.Log;
-            this.config.PropertyChanged -= this.Config_PropertyChanged;
+            this.Config.PropertyChanged -= this.Config_PropertyChanged;
             base.Dispose();
         }
 
@@ -30,8 +32,8 @@ namespace kagami
         {
             switch (e.PropertyName)
             {
-                case nameof(KagamiOverlayConfig.PollingInterval):
-                    this.timer.Interval = this.config.PollingInterval;
+                case nameof(IKagamiOverlayConfig.PollingInterval):
+                    this.timer.Interval = this.Config.PollingInterval;
                     break;
             }
         }
@@ -40,6 +42,30 @@ namespace kagami
         private volatile bool isUpdating = false;
         private long previousSeq = 0;
         private bool previousStats = false;
+
+        public override void Start()
+        {
+            Task.Run(async () =>
+            {
+                FFXIVPluginHelper.Instance.Start();
+                SharlayanHelper.Instance.Start();
+
+                await Task.Delay(100);
+
+                XIVLogSubscriber.Instance.Start();
+            });
+
+            base.Start();
+        }
+
+        public override void Stop()
+        {
+            XIVLogSubscriber.Instance.Stop();
+            FFXIVPluginHelper.Instance.Stop();
+            SharlayanHelper.Instance.Stop();
+
+            base.Stop();
+        }
 
         protected override async void Update()
         {
@@ -62,7 +88,7 @@ namespace kagami
                     {
                         if (this.timer.Interval == LongInterval)
                         {
-                            this.timer.Interval = this.config.PollingInterval;
+                            this.timer.Interval = this.Config.PollingInterval;
                         }
                     }
                 }
@@ -98,18 +124,12 @@ namespace kagami
                     $"var model =\n{ json };\n\n" +
                     "document.dispatchEvent(new CustomEvent('onActionUpdated', { detail: model }));\n";
 
-                this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
-                    updateScript,
-                    null,
-                    0);
+                this.Overlay?.Renderer?.ExecuteScript(updateScript);
 
                 if (isNeedsSave)
                 {
                     var script = "document.dispatchEvent(new CustomEvent('onEndEncounter', null));\n";
-                    this.Overlay?.Renderer?.Browser?.GetMainFrame()?.ExecuteJavaScript(
-                        script,
-                        null,
-                        0);
+                    this.Overlay?.Renderer?.ExecuteScript(script);
 
                     await ActionEchoesModel.Instance.SaveLogAsync();
                     ActionEchoesModel.Instance.Clear();

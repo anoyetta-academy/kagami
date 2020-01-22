@@ -71,4 +71,14 @@
       -> アイコンはアクションの中からマッチしそうなものを仮に設定しました
     </description>
   </note>
+
+  <note>
+    <version>0.4.0.4409</version>
+    <channel>Beta</channel>
+    <timestamp>2020-01-23T09:45:07.8814883+09:00</timestamp>
+    <uri>https://github.com/anoyetta-academy/kagami/releases/download/v0.4.0.4409-Beta/kagami_v0_4_0_4409_Beta.zip</uri>
+    <description>
+    * ngld/OverlayPlugin に対応した。旧OverlayPluginでは動作しません
+    </description>
+  </note>
 </release_notes>

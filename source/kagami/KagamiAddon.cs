@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Net;
 using System.Reflection;
-using System.Windows.Forms;
 using RainbowMage.OverlayPlugin;
 
 namespace kagami
 {
     public class KagamiAddon :
-        IOverlayAddon
+        IOverlayAddonV2
     {
         static KagamiAddon()
         {
@@ -15,46 +14,31 @@ namespace kagami
             AssemblyResolver.Initialize();
         }
 
+        public static KagamiAddon Instance { get; private set; }
+
         public KagamiAddon()
         {
-            this.core = new KagamiAddonCore();
-
-            var asm = Assembly.GetCallingAssembly();
-            if (string.IsNullOrEmpty(asm.Location))
-            {
-                asm = Assembly.GetExecutingAssembly();
-            }
-
-            this.core.ResourcesDirectory = Path.Combine(
-                Path.GetDirectoryName(asm.Location),
-                "resources");
+            Instance = this;
         }
 
-        private dynamic core;
+        public string Name => $"kagami";
 
-        public string Name => this.core.Name;
+        public string Description => "FFXIV skill rotation viewer.";
 
-        public string Description => this.core.Description;
+        public string ResourcesDirectory { get; private set; }
 
-        public Type OverlayType => this.core.OverlayType;
-
-        public Type OverlayConfigType => this.core.OverlayConfigType;
-
-        public Type OverlayConfigControlType => this.core.OverlayConfigControlType;
-
-        public Control CreateOverlayConfigControlInstance(IOverlay overlay) => this.core.CreateOverlayConfigControlInstance(overlay);
-
-        public IOverlayConfig CreateOverlayConfigInstance(string name) => this.core.CreateOverlayConfigInstance(name);
-
-        public IOverlay CreateOverlayInstance(IOverlayConfig config) => this.core.CreateOverlayInstance(config);
-
-        public void Dispose()
+        public void Init()
         {
-            if (this.core != null)
-            {
-                this.core.Dispose();
-                this.core = null;
-            }
+            ServicePointManager.DefaultConnectionLimit = 32;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+
+            this.ResourcesDirectory = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "resources");
+
+            Registry.RegisterOverlay<KagamiOverlay>();
         }
     }
 }

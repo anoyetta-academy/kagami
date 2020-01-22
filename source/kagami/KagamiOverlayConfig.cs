@@ -12,9 +12,14 @@ namespace kagami
         OverlayConfigBase,
         INotifyPropertyChanged
     {
+        [XmlIgnore]
+        public static KagamiOverlayConfig Current { get; private set; }
+
         public KagamiOverlayConfig(string name)
             : base(name)
         {
+            Current = this;
+
             this.SubscribeBasePropertiesChanged();
 
             this.IsVisible = true;
@@ -35,11 +40,7 @@ namespace kagami
             this.ClickThruChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.IsClickThru));
             this.UrlChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.Url));
             this.MaxFrameRateChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.MaxFrameRate));
-            this.GlobalHotkeyEnabledChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.GlobalHotkeyEnabled));
-            this.GlobalHotkeyChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.GlobalHotkey));
-            this.GlobalHotkeyModifiersChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.GlobalHotkeyModifiers));
             this.LockChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.IsLocked));
-            this.GlobalHotkeyTypeChanged += (x, _) => (x as KagamiOverlayConfig).RaisePropertyChanged(nameof(this.GlobalHotkeyType));
         }
 
         private bool isDesignMode;
@@ -84,7 +85,7 @@ namespace kagami
         }
 
         private string logDirectory = Path.GetFullPath(Path.Combine(
-            KagamiAddonCore.Current.ResourcesDirectory,
+            KagamiAddon.Instance.ResourcesDirectory,
             "..",
             "logs"));
 

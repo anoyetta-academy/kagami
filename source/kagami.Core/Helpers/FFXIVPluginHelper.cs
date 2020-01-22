@@ -37,8 +37,6 @@ namespace kagami.Helpers
         private static readonly double AttachSubscribeInterval = 3000;
         private static readonly double CombatantSubscribeInterval = 500;
 
-        private KagamiOverlayConfig Config => KagamiAddonCore.Current.Config as KagamiOverlayConfig;
-
         public void Start()
         {
             this.pluginSubscriber = new ThreadWorker(() =>
