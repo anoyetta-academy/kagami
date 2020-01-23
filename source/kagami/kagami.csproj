@@ -401,6 +401,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\kagamiLoader\kagamiLoader.csproj">
+      <Project>{a76da530-eab6-48e9-b5c7-f1e1148f220a}</Project>
+      <Name>kagamiLoader</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -27,7 +27,7 @@ namespace kagami
         }
 
         private KagamiOverlayConfig()
-            : this(null)
+            : this("DUMMY")
         {
         }
 

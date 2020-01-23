@@ -25,7 +25,7 @@ namespace kagami
 
         public string Description => "FFXIV skill rotation viewer.";
 
-        public string ResourcesDirectory { get; private set; }
+        public string ResourcesDirectory { get; private set; } = string.Empty;
 
         public void Init()
         {
