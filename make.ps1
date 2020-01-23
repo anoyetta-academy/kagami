@@ -95,7 +95,7 @@ foreach ($d in $targetDirectories) {
 }
 
 $target = Get-Item .\source\*.sln
-& $msbuild $target /nologo /v:minimal /t:Clean /p:Configuration=Release
+& $msbuild $target /nologo /v:minimal /t:Rebuild /p:Configuration=Release
 Start-Sleep -m 100
 
 # Successed? build

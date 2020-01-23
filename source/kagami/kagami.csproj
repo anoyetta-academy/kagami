@@ -409,19 +409,20 @@
   <PropertyGroup>
     <PostBuildEvent>@echo off
 
-move /y $(TargetDir)OverlayPlugin.dll $(TargetDir)..\&gt;nul
-move /y $(TargetDir)OverlayPlugin.dll.config $(TargetDir)..\&gt;nul
-
-move /y $(TargetDir)OverlayPlugin.*.dll $(TargetDir)..\libs\&gt;nul
-move /y $(TargetDir)HtmlRenderer.dll $(TargetDir)..\libs\&gt;nul
-move /y $(TargetDir)Xilium.CefGlue.dll $(TargetDir)..\libs\&gt;nul
-
 xcopy /e /y $(TargetDir)resources $(TargetDir)..\resources\&gt;nul
 rmdir /s /q $(TargetDir)resources&gt;nul
 
 if $(ConfigurationName)==Release (
     for /F %25%25a in ('dir /AD /B /W *') do rd /S /Q %25%25a&gt;nul
-    del /q $(TargetDir)\..\*.dll&gt;nul
+    del /q $(TargetDir)Overlay*.dll&gt;nul
+    del /q $(TargetDir)HtmlRenderer.dll&gt;nul
+    del /q $(TargetDir)*.config&gt;nul
+) else (
+    move /y $(TargetDir)OverlayPlugin.dll $(TargetDir)..\&gt;nul
+    move /y $(TargetDir)OverlayPlugin.dll.config $(TargetDir)..\&gt;nul
+
+    move /y $(TargetDir)OverlayPlugin.*.dll $(TargetDir)..\libs\&gt;nul
+    move /y $(TargetDir)HtmlRenderer.dll $(TargetDir)..\libs\&gt;nul
 )
 </PostBuildEvent>
   </PropertyGroup>
